@@ -85,4 +85,54 @@ public abstract class Cliente {
 			iterador.remove();
 		}
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((CUIT == null) ? 0 : CUIT.hashCode());
+	
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cliente other = (Cliente) obj;
+		if (CUIT == null) {
+			if (other.CUIT != null)
+				return false;
+		} else if (!CUIT.equals(other.CUIT))
+			return false;
+		if (cuentas == null) {
+			if (other.cuentas != null)
+				return false;
+		} else if (!cuentas.equals(other.cuentas))
+			return false;
+		if (domicilio == null) {
+			if (other.domicilio != null)
+				return false;
+		} else if (!domicilio.equals(other.domicilio))
+			return false;
+		if (habilitado != other.habilitado)
+			return false;
+		if (nombreORazonSocial == null) {
+			if (other.nombreORazonSocial != null)
+				return false;
+		} else if (!nombreORazonSocial.equals(other.nombreORazonSocial))
+			return false;
+		if (telefono == null) {
+			if (other.telefono != null)
+				return false;
+		} else if (!telefono.equals(other.telefono))
+			return false;
+		return true;
+	}
+	
+	
 }

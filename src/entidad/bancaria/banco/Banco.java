@@ -13,7 +13,7 @@ public class Banco {
 	private HashSet<Cliente> clientes;
 	private CuentaEspecial retenciones;
 	private CuentaEspecial mantenimiento;
-	private Double tipoDeCambioVigente;
+	public final static double cotizacionDolar = 14.8;
 
 	public Banco() {
 		retenciones = new CuentaEspecial();
@@ -39,19 +39,20 @@ public class Banco {
 	public void extraccionEnEfectivo(Cuenta cuentaDestino, Double monto) {
 		try {
 			OperacionPorVentanilla.extraccionEnEfectivo(cuentaDestino, monto);
-		} catch (CuentaInhabilitadaException | SaldoInsuficienteException | OperacionNoPermitidaException e) {
+		} catch (CuentaInhabilitadaException | SaldoInsuficienteException
+				| OperacionNoPermitidaException e) {
 			System.out.println(e);
 		}
 	}
-	
-	
 
 	// Gestion De Cuentas
 
-	public int aperturaDeCajaDeAhorro(Cliente[] clientes, Double saldo, Double tasaDeInteres, TipoDeMoneda tipoDeMoneda) {
+	public int aperturaDeCajaDeAhorro(Cliente[] clientes, Double saldo,
+			Double tasaDeInteres, TipoDeMoneda tipoDeMoneda) {
 		int cbu = 0;
 		try {
-			CajaDeAhorro cuenta = new CajaDeAhorro(clientes, saldo, tasaDeInteres , tipoDeMoneda);
+			CajaDeAhorro cuenta = new CajaDeAhorro(clientes, saldo,
+					tasaDeInteres, tipoDeMoneda);
 			cbu = cuenta.getCBU();
 			this.cuentas.add(cuenta);
 		} catch (SaldoInsuficienteException | SinClientesException e) {
@@ -60,10 +61,12 @@ public class Banco {
 		return cbu;
 	}
 
-	public int aperturaDeCuentaCorriente(Cliente[] clientes, Double saldo, Double sobregiro) {
+	public int aperturaDeCuentaCorriente(Cliente[] clientes, Double saldo,
+			Double sobregiro) {
 		int cbu = 0;
 		try {
-			CuentaCorriente cuenta = new CuentaCorriente(clientes, saldo, sobregiro);
+			CuentaCorriente cuenta = new CuentaCorriente(clientes, saldo,
+					sobregiro);
 			cbu = cuenta.getCBU();
 			this.cuentas.add(cuenta);
 		} catch (SaldoInsuficienteException | SinClientesException e) {
@@ -104,16 +107,19 @@ public class Banco {
 
 	// Gestion de clientes
 
-	public void agregarCliente(String CUIT, String nombreORazonSocial, Domicilio domicilio, String telefono,
-			String tipoDeDocumento, String numeroDeDocumento, String estadoCivil, String profesion,
+	public void agregarCliente(String CUIT, String nombreORazonSocial,
+			Domicilio domicilio, String telefono, String tipoDeDocumento,
+			String numeroDeDocumento, String estadoCivil, String profesion,
 			String nombreYApellidoDelConyuge) {
-		this.clientes.add(new PersonaFisica(CUIT, nombreORazonSocial, domicilio, telefono, tipoDeDocumento,
-				numeroDeDocumento, estadoCivil, profesion, nombreYApellidoDelConyuge));
+		this.clientes.add(new PersonaFisica(CUIT, nombreORazonSocial,
+				domicilio, telefono, tipoDeDocumento, numeroDeDocumento,
+				estadoCivil, profesion, nombreYApellidoDelConyuge));
 	}
 
-	public void agregarCliente(String CUIT, String nombreORazonSocial, Domicilio domicilio, String telefono,
-			String fechaDelContratoSocial) {
-		this.clientes.add(new PersonaJuridica(CUIT, nombreORazonSocial, domicilio, telefono, fechaDelContratoSocial));
+	public void agregarCliente(String CUIT, String nombreORazonSocial,
+			Domicilio domicilio, String telefono, String fechaDelContratoSocial) {
+		this.clientes.add(new PersonaJuridica(CUIT, nombreORazonSocial,
+				domicilio, telefono, fechaDelContratoSocial));
 	}
 
 	public void bajaCliente(Cliente cliente) {
