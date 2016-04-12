@@ -20,8 +20,31 @@ public class Banco {
 		mantenimiento = new CuentaEspecial();
 	}
 
-	// Operaciones Por Ventanilla
+	/*
+	 * Operatoria Bancaria
+	 */
 
+	/*
+	 * Operaciones por ventanilla
+	 */
+
+	public void depositoEnEfectivo(Cuenta cuentaDestino, Double monto) {
+		try {
+			OperacionPorVentanilla.depositoEnEfectivo(cuentaDestino, monto);
+		} catch (CuentaInhabilitadaException e) {
+			System.out.println(e);
+		}
+	}
+
+	public void extraccionEnEfectivo(Cuenta cuentaDestino, Double monto) {
+		try {
+			OperacionPorVentanilla.extraccionEnEfectivo(cuentaDestino, monto);
+		} catch (CuentaInhabilitadaException | SaldoInsuficienteException | OperacionNoPermitidaException e) {
+			System.out.println(e);
+		}
+	}
+	
+	
 
 	// Gestion De Cuentas
 

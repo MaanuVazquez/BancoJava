@@ -40,23 +40,29 @@ public abstract class Cuenta {
 		return saldo;
 	}
 
-	public void acreditar(Double monto, MotivoDeTransaccion motivo) throws CuentaInhabilitadaException {
+	public void acreditar(Double monto) throws CuentaInhabilitadaException {
 		if (!this.isHabilitada()) {
 			throw new CuentaInhabilitadaException();
 		}
-		transacciones.add(new Transaccion(TipoDeMovimiento.CREDITO, monto, motivo));
 		this.saldo += monto;
 	}
 
-	public void debitar(Double monto, MotivoDeTransaccion motivo)
-			throws SaldoInsuficienteException, CuentaInhabilitadaException {
+	public void debitar(Double monto) throws SaldoInsuficienteException, CuentaInhabilitadaException {
 		if (!this.isHabilitada()) {
 			throw new CuentaInhabilitadaException();
 		}
 		if (monto > this.saldo) {
 			throw new SaldoInsuficienteException();
 		}
-		transacciones.add(new Transaccion(TipoDeMovimiento.DEBITO, monto, motivo, ""));
 		this.saldo -= monto;
+	}
+
+	public void crearTransaccion(TipoDeMovimiento movimiento, Double monto, MotivoDeTransaccion motivo) {
+		this.transacciones.add(new Transaccion(movimiento, monto, motivo));
+	}
+
+	public void crearTransaccion(TipoDeMovimiento movimiento, Double monto, MotivoDeTransaccion motivo,
+			String observaciones) {
+		this.transacciones.add(new Transaccion(movimiento, monto, motivo, observaciones));
 	}
 }

@@ -6,15 +6,15 @@ import java.util.Iterator;
 import entidad.bancaria.cuentas.Cuenta;
 
 public abstract class Cliente {
-	
+
 	private String CUIT;
 	private String nombreORazonSocial;
 	private String telefono;
 	private Domicilio domicilio;
 	private HashSet<Cuenta> cuentas;
 	private boolean habilitado;
-	
-	protected Cliente(String CUIT, String nombreORazonSocial, Domicilio domicilio, String telefono){
+
+	protected Cliente(String CUIT, String nombreORazonSocial, Domicilio domicilio, String telefono) {
 		this.CUIT = CUIT;
 		this.nombreORazonSocial = nombreORazonSocial;
 		this.setDomicilio(domicilio);
@@ -26,20 +26,20 @@ public abstract class Cliente {
 		return habilitado;
 	}
 
-	public void deshabilitar(){
+	public void deshabilitar() {
 		boolean cuentaHabilitada = false;
-		if(!cuentas.isEmpty()){
+		if (!cuentas.isEmpty()) {
 			Iterator<Cuenta> iterador = cuentas.iterator();
 			Cuenta cuenta;
-			while(iterador.hasNext() && !cuentaHabilitada){
+			while (iterador.hasNext() && !cuentaHabilitada) {
 				cuenta = iterador.next();
 				cuentaHabilitada = cuenta.isHabilitada();
 			}
 		}
 		this.habilitado = cuentaHabilitada;
 	}
-	
-	public void habilitar(){
+
+	public void habilitar() {
 		this.habilitado = true;
 	}
 
@@ -70,18 +70,18 @@ public abstract class Cliente {
 	public HashSet<Cuenta> getCuentas() {
 		return cuentas;
 	}
-	
-	public void asignarCuenta(Cuenta cuenta){
+
+	public void asignarCuenta(Cuenta cuenta) {
 		cuentas.add(cuenta);
 	}
-	
-	public void removerCuenta(Cuenta cuenta){
+
+	public void removerCuenta(Cuenta cuenta) {
 		Iterator<Cuenta> iterador = cuentas.iterator();
 		Cuenta cuentaTemporal = iterador.next();
-		while(iterador.hasNext() && cuentaTemporal != cuenta){
+		while (iterador.hasNext() && cuentaTemporal != cuenta) {
 			cuenta = iterador.next();
 		}
-		if (cuenta.equals(cuentaTemporal)){
+		if (cuenta.equals(cuentaTemporal)) {
 			iterador.remove();
 		}
 	}
