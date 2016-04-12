@@ -12,12 +12,14 @@ public abstract class Cuenta {
 	private boolean habilitada;
 	protected ArrayList<Transaccion> transacciones;
 	protected Double saldo;
+	private TipoDeMoneda tipoDeMoneda;
 
 	protected Cuenta() {
 		cbu = CBU_MAX;
 		CBU_MAX++;
 		setHabilitada(true);
 		saldo = 0.0;
+		tipoDeMoneda = TipoDeMoneda.PESO;
 	}
 
 	public Integer getCBU() {
@@ -40,6 +42,15 @@ public abstract class Cuenta {
 		return saldo;
 	}
 
+	public TipoDeMoneda getTipoDeMoneda() {
+		return this.tipoDeMoneda;
+	}
+
+	// estoy podrido de escribir tipodeMoneda
+	public void setTipoDeMoneda(TipoDeMoneda tipoDeMoneda) {
+		this.tipoDeMoneda = tipoDeMoneda;
+	}
+
 	public void acreditar(Double monto) throws CuentaInhabilitadaException {
 		if (!this.isHabilitada()) {
 			throw new CuentaInhabilitadaException();
@@ -47,7 +58,8 @@ public abstract class Cuenta {
 		this.saldo += monto;
 	}
 
-	public void debitar(Double monto) throws SaldoInsuficienteException, CuentaInhabilitadaException {
+	public void debitar(Double monto) throws SaldoInsuficienteException,
+			CuentaInhabilitadaException {
 		if (!this.isHabilitada()) {
 			throw new CuentaInhabilitadaException();
 		}
@@ -57,12 +69,14 @@ public abstract class Cuenta {
 		this.saldo -= monto;
 	}
 
-	public void crearTransaccion(TipoDeMovimiento movimiento, Double monto, MotivoDeTransaccion motivo) {
+	public void crearTransaccion(TipoDeMovimiento movimiento, Double monto,
+			MotivoDeTransaccion motivo) {
 		this.transacciones.add(new Transaccion(movimiento, monto, motivo));
 	}
 
-	public void crearTransaccion(TipoDeMovimiento movimiento, Double monto, MotivoDeTransaccion motivo,
-			String observaciones) {
-		this.transacciones.add(new Transaccion(movimiento, monto, motivo, observaciones));
+	public void crearTransaccion(TipoDeMovimiento movimiento, Double monto,
+			MotivoDeTransaccion motivo, String observaciones) {
+		this.transacciones.add(new Transaccion(movimiento, monto, motivo,
+				observaciones));
 	}
 }

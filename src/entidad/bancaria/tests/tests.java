@@ -16,25 +16,28 @@ import entidad.bancaria.cuentas.*;
 public class tests {
 
 	public static void main(String[] args) {
-		// pruebaTransacciones();
-		pruebaCuentas();
+		pruebaTransacciones();
+		// pruebaCuentas();
 	}
 
 	public static void pruebaTransacciones() {
 		// Prueba Transacciones
-		System.out.println(new Transaccion(TipoDeMovimiento.CREDITO, 9999.0, MotivoDeTransaccion.COBRO_DE_MANTENIMIENTO)
+		System.out.println(new Transaccion(TipoDeMovimiento.CREDITO, 9999.0,
+				MotivoDeTransaccion.COBRO_DE_MANTENIMIENTO).toString());
+		System.out.println(new Transaccion(TipoDeMovimiento.CREDITO, 9999.0,
+				MotivoDeTransaccion.COBRO_DE_MANTENIMIENTO, "Aguante el Paco")
 				.toString());
-		System.out.println(new Transaccion(TipoDeMovimiento.CREDITO, 9999.0, MotivoDeTransaccion.COBRO_DE_MANTENIMIENTO,
-				"Aguante el Paco").toString());
 	}
 
 	public static void pruebaCuentas() {
 		Cliente carlos = new PersonaJuridica("CUIT", "NombreORazonSocial",
-				new Domicilio("Direccion", "CodigoPostal", "Localidad", "Provincia"), "Telefono", "Fecha");
+				new Domicilio("Direccion", "CodigoPostal", "Localidad",
+						"Provincia"), "Telefono", "Fecha");
 		Cliente[] listaCuentas = new Cliente[] { carlos };
 		try {
-			CuentaCorriente cuenta = new CuentaCorriente(listaCuentas, 20000.0, -1000.0);
-			CajaDeAhorro cuenta2 = new CajaDeAhorro(listaCuentas, 10000.0, 3.0);
+			CuentaCorriente cuenta = new CuentaCorriente(listaCuentas, 20000.0,
+					-1000.0);
+			CajaDeAhorro cuenta2 = new CajaDeAhorro(listaCuentas, 10000.0, 3.0, TipoDeMoneda.PESO);
 			HashSet<Cuenta> hasheo = new HashSet<Cuenta>();
 			hasheo.add(cuenta);
 			hasheo.add(cuenta2);
@@ -46,14 +49,18 @@ public class tests {
 					System.out.println("la cuenta no es instancia de Cuenta");
 				}
 				if (c instanceof CajaDeAhorro) {
-					System.out.println("la cuenta es instancia de CajaDeAhorro");
+					System.out
+							.println("la cuenta es instancia de CajaDeAhorro");
 				} else {
-					System.out.println("la cuenta no es instancia de CajaDeAhorro");
+					System.out
+							.println("la cuenta no es instancia de CajaDeAhorro");
 				}
 				if (c instanceof CuentaCorriente) {
-					System.out.println("la cuenta es instancia de CuentaCorriente");
+					System.out
+							.println("la cuenta es instancia de CuentaCorriente");
 				} else {
-					System.out.println("la cuenta no es instancia de CuentaCorriente");
+					System.out
+							.println("la cuenta no es instancia de CuentaCorriente");
 				}
 			}
 

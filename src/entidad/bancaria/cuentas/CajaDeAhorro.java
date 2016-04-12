@@ -12,8 +12,9 @@ public class CajaDeAhorro extends Cuenta {
 	private static Double COSTO_DE_MANTENIMIENTO_EN_PESOS = 0.0;
 	private static Double COSTO_DE_MANTENIMIENTO_EN_DOLARES = 0.0;
 
-	public CajaDeAhorro(Cliente[] clientes, Double saldo, Double tasaDeInteres)
-			throws SaldoInsuficienteException, SinClientesException {
+	public CajaDeAhorro(Cliente[] clientes, Double saldo, Double tasaDeInteres,
+			TipoDeMoneda tipoDeMoneda) throws SaldoInsuficienteException,
+			SinClientesException {
 		super();
 		if (saldo <= 0) {
 			throw new SaldoInsuficienteException();
@@ -23,6 +24,7 @@ public class CajaDeAhorro extends Cuenta {
 		this.clientes = clientes;
 		this.saldo = saldo;
 		this.tasaDeInteres = tasaDeInteres;
+		setTipoDeMoneda(tipoDeMoneda);
 	}
 
 	public Integer getCBU() {
@@ -41,7 +43,8 @@ public class CajaDeAhorro extends Cuenta {
 		return COSTO_DE_MANTENIMIENTO_EN_PESOS;
 	}
 
-	public static void setCOSTO_DE_MANTENIMIENTO_EN_PESOS(Double COSTO_DE_MANTENIMIENTO_EN_PESOS) {
+	public static void setCOSTO_DE_MANTENIMIENTO_EN_PESOS(
+			Double COSTO_DE_MANTENIMIENTO_EN_PESOS) {
 		CajaDeAhorro.COSTO_DE_MANTENIMIENTO_EN_PESOS = COSTO_DE_MANTENIMIENTO_EN_PESOS;
 	}
 
@@ -49,7 +52,8 @@ public class CajaDeAhorro extends Cuenta {
 		return COSTO_DE_MANTENIMIENTO_EN_DOLARES;
 	}
 
-	public static void setCOSTO_DE_MANTENIMIENTO_EN_DOLARES(Double COSTO_DE_MANTENIMIENTO_EN_DOLARES) {
+	public static void setCOSTO_DE_MANTENIMIENTO_EN_DOLARES(
+			Double COSTO_DE_MANTENIMIENTO_EN_DOLARES) {
 		CajaDeAhorro.COSTO_DE_MANTENIMIENTO_EN_DOLARES = COSTO_DE_MANTENIMIENTO_EN_DOLARES;
 	}
 

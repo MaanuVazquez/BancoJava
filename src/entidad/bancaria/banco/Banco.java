@@ -48,10 +48,10 @@ public class Banco {
 
 	// Gestion De Cuentas
 
-	public int aperturaDeCajaDeAhorro(Cliente[] clientes, Double saldo, Double tasaDeInteres) {
+	public int aperturaDeCajaDeAhorro(Cliente[] clientes, Double saldo, Double tasaDeInteres, TipoDeMoneda tipoDeMoneda) {
 		int cbu = 0;
 		try {
-			CajaDeAhorro cuenta = new CajaDeAhorro(clientes, saldo, tasaDeInteres);
+			CajaDeAhorro cuenta = new CajaDeAhorro(clientes, saldo, tasaDeInteres , tipoDeMoneda);
 			cbu = cuenta.getCBU();
 			this.cuentas.add(cuenta);
 		} catch (SaldoInsuficienteException | SinClientesException e) {
@@ -63,7 +63,7 @@ public class Banco {
 	public int aperturaDeCuentaCorriente(Cliente[] clientes, Double saldo, Double sobregiro) {
 		int cbu = 0;
 		try {
-			CajaDeAhorro cuenta = new CajaDeAhorro(clientes, saldo, sobregiro);
+			CuentaCorriente cuenta = new CuentaCorriente(clientes, saldo, sobregiro);
 			cbu = cuenta.getCBU();
 			this.cuentas.add(cuenta);
 		} catch (SaldoInsuficienteException | SinClientesException e) {
