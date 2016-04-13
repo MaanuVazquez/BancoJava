@@ -1,5 +1,6 @@
 package entidad.bancaria.banco;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -9,15 +10,15 @@ import entidad.bancaria.excepciones.*;
 
 public class Banco {
 
-	private HashSet<Cuenta> cuentas;
-	private HashSet<Cliente> clientes;
-	private CuentaEspecial retenciones;
-	private CuentaEspecial mantenimiento;
-	public final static double cotizacionDolar = 14.8;
+	private static HashSet<Cuenta> cuentas;
+	private static HashSet<Cliente> clientes;
+	private static CuentaRetenciones retenciones;
+	private static CuentaMantenimiento mantenimiento;
+	private static double cotizacionDolar = 14.8;
 
 	public Banco() {
-		retenciones = new CuentaEspecial();
-		mantenimiento = new CuentaEspecial();
+		retenciones = new CuentaRetenciones();
+		mantenimiento = new CuentaMantenimiento();
 	}
 
 	/*
@@ -54,7 +55,7 @@ public class Banco {
 			CajaDeAhorro cuenta = new CajaDeAhorro(clientes, saldo,
 					tasaDeInteres, tipoDeMoneda);
 			cbu = cuenta.getCBU();
-			this.cuentas.add(cuenta);
+			Banco.cuentas.add(cuenta);
 		} catch (SaldoInsuficienteException | SinClientesException e) {
 			e.printStackTrace();
 		}
@@ -68,7 +69,7 @@ public class Banco {
 			CuentaCorriente cuenta = new CuentaCorriente(clientes, saldo,
 					sobregiro);
 			cbu = cuenta.getCBU();
-			this.cuentas.add(cuenta);
+			Banco.cuentas.add(cuenta);
 		} catch (SaldoInsuficienteException | SinClientesException e) {
 			e.printStackTrace();
 		}
@@ -111,14 +112,14 @@ public class Banco {
 			Domicilio domicilio, String telefono, String tipoDeDocumento,
 			String numeroDeDocumento, String estadoCivil, String profesion,
 			String nombreYApellidoDelConyuge) {
-		this.clientes.add(new PersonaFisica(CUIT, nombreORazonSocial,
+		Banco.clientes.add(new PersonaFisica(CUIT, nombreORazonSocial,
 				domicilio, telefono, tipoDeDocumento, numeroDeDocumento,
 				estadoCivil, profesion, nombreYApellidoDelConyuge));
 	}
 
 	public void agregarCliente(String CUIT, String nombreORazonSocial,
 			Domicilio domicilio, String telefono, String fechaDelContratoSocial) {
-		this.clientes.add(new PersonaJuridica(CUIT, nombreORazonSocial,
+		Banco.clientes.add(new PersonaJuridica(CUIT, nombreORazonSocial,
 				domicilio, telefono, fechaDelContratoSocial));
 	}
 
@@ -133,6 +134,25 @@ public class Banco {
 	// Proceso Bach
 
 	public void cobroDeMantenimiento() {
+		try {
+			mantenimiento.cobrarMantenimiento();
+		} catch (IOException e) {
+			// TODO Bloque catch generado automáticamente
+			e.printStackTrace();
+		}
+	}
 
+	// Cobrar Retenciones
+
+	public static void cobrarRetenciones(double monto){
+		try {
+			Banco.retenciones.acreditar(monto);
+		} catch (CuentaInhabilitadaException e) {
+
+		}
+	}
+
+	public static double getCotizacion(){
+		return cotizacionDolar;
 	}
 }

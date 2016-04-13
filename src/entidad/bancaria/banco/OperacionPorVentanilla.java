@@ -46,6 +46,7 @@ public class OperacionPorVentanilla {
 			throws CuentaInhabilitadaException, SaldoInsuficienteException,
 			OperacionNoPermitidaException {
 
+		// hay que encontrar un mejor modo de hacer esto, el instanceof no habria que usarlo nunca
 		if (cuentaDestino instanceof CuentaCorriente) {
 			throw new OperacionNoPermitidaException();
 		}
@@ -79,20 +80,20 @@ public class OperacionPorVentanilla {
 			cuentaDestino.crearTransaccion(TipoDeMovimiento.DEBITO, monto,
 					MotivoDeTransaccion.TRANSFERENCIA);
 		} else if (cuentaOrigen.getTipoDeMoneda() == TipoDeMoneda.PESO) {
-			monto = monto / Banco.cotizacionDolar;
+			monto = monto / Banco.getCotizacion();
 			cuentaDestino.acreditar(monto);
 			cuentaDestino.crearTransaccion(TipoDeMovimiento.DEBITO, monto,
 					MotivoDeTransaccion.TRANSFERENCIA,
 					"Conversión de Peso Argentino(ARS) a Dolar(USD): " + monto
-							+ " Cotización: 1 ARS - " + Banco.cotizacionDolar
+							+ " Cotización: 1 ARS - " + Banco.getCotizacion()
 							+ " USD");
 		} else {
-			monto = monto * Banco.cotizacionDolar;
+			monto = monto * Banco.getCotizacion();
 			cuentaDestino.acreditar(monto);
 			cuentaDestino.crearTransaccion(TipoDeMovimiento.DEBITO, monto,
 					MotivoDeTransaccion.TRANSFERENCIA,
 					"Conversión de Dolar(USD) a Peso Argentino(ARS): " + monto
-							+ " Cotización: 1 ARS - " + Banco.cotizacionDolar
+							+ " Cotización: 1 ARS - " + Banco.getCotizacion()
 							+ " USD");
 		}
 

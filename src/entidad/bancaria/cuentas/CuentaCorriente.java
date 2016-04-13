@@ -1,5 +1,6 @@
 package entidad.bancaria.cuentas;
 
+import entidad.bancaria.banco.Banco;
 import entidad.bancaria.clientes.Cliente;
 import entidad.bancaria.excepciones.SaldoInsuficienteException;
 import entidad.bancaria.excepciones.SinClientesException;
@@ -50,7 +51,7 @@ public class CuentaCorriente extends Cuenta {
 		transacciones.add(new Transaccion(TipoDeMovimiento.DEBITO, monto * COMISION,
 				MotivoDeTransaccion.RETENCION_DE_IMPUESTOS, ""));
 		this.saldo += monto * (1 - COMISION);
-
+		Banco.cobrarRetenciones(monto * (COMISION));
 	}
 
 	public void debitar(Double monto, String fecha, MotivoDeTransaccion motivo) throws SaldoInsuficienteException {
@@ -62,6 +63,7 @@ public class CuentaCorriente extends Cuenta {
 		transacciones.add(new Transaccion(TipoDeMovimiento.DEBITO, monto * COMISION,
 				MotivoDeTransaccion.RETENCION_DE_IMPUESTOS, ""));
 		this.saldo -= monto * (1 + COMISION);
+		Banco.cobrarRetenciones(monto * (COMISION));
 	}
 
 }
