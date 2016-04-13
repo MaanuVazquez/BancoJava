@@ -4,12 +4,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 
 import entidad.bancaria.banco.Banco;
 import entidad.bancaria.excepciones.CuentaInhabilitadaException;
@@ -32,41 +28,56 @@ public class CuentaMantenimiento extends Cuenta{
 		cuentas.add(cuenta);
 	}
 
-	public void cobrarMantenimiento() throws IOException {
-
-		File cobrados = new File("C//", "CobroDeMantenimiento " + new Date().toLocaleString() + ".txt");
-		File errores = new File("C//", "CobroDeMantenimiento " + new Date().toLocaleString() + ".txt");
+	public void cobroDeMantenimientos() throws IOException {
+		
+		Calendar calendar = Calendar.getInstance();
+		int dia = calendar.get(Calendar.DAY_OF_MONTH);
+		int mes = calendar.get(Calendar.MONTH + 1);
+		int año = calendar.get(Calendar.YEAR);
+		File cobrados = new File("MantenimientosCobrados " + año + "-" + mes + "-" + dia + ".txt");
+		File errores = new File("ErroresMantenimiento " + año + "-" + mes + "-" + dia + ".txt");
 		BufferedWriter cobradosBW = new BufferedWriter(new FileWriter(cobrados));
 		BufferedWriter erroresBW = new BufferedWriter(new FileWriter(errores));
-		double monto;
 		
 		for (int i = 0; i < cuentas.size(); i++) {
 			
-			if(cuentas.get(i).getTipoDeMoneda() == TipoDeMoneda.PESO){
-				monto = costoDeMantenimiento;
-			} else {
-				monto = costoDeMantenimiento / Banco.getCotizacion();
-			}
+			debitarMantenimiento(i, cobradosBW, erroresBW);
 			
-			try {
-				cuentas.get(i).debitar(monto);
-				cobradosBW.write("CBU: " + cuentas.get(i).getCBU() + ", Tipo De Cuenta: Caja De Ahorro, " +
-						monto + ", " + cuentas.get(i).getTipoDeMoneda() + ", " + Banco.getCotizacion() + ".\n");
-				this.acreditar(costoDeMantenimiento);
-				
-			} catch (SaldoInsuficienteException e) {
-				
-				erroresBW.write("CBU: " + cuentas.get(i).getCBU() + ", Tipo De Cuenta: Caja De Ahorro, " +
-						monto + ", Motivo : Saldo insuficiente.\n");
-			} catch (CuentaInhabilitadaException e) {
-				
-				erroresBW.write("CBU: " + cuentas.get(i).getCBU() + ", Tipo De Cuenta: Caja De Ahorro, " +
-						monto + ", Motivo : CuentaInhabilitada.\n");
-			}
-		}
+		} 
+		
 		cobradosBW.close();
 		erroresBW.close();
 	}
+	
+	private void debitarMantenimiento(int i, BufferedWriter cobradosBW, BufferedWriter erroresBW) throws IOException{
+		
+		double monto;
+		
+		if(cuentas.get(i).getTipoDeMoneda() == TipoDeMoneda.PESO){
+			monto = costoDeMantenimiento;
+		} else {
+			monto = costoDeMantenimiento / Banco.getCotizacion();
+		}
+		
+		try {
+			cuentas.get(i).debitar(monto);
+			cobradosBW.write("CBU: " + cuentas.get(i).getCBU() + ", Tipo De Cuenta: Caja De Ahorro, " +
+					monto + ", " + cuentas.get(i).getTipoDeMoneda() + ", " + Banco.getCotizacion() + ".\n");
+			
+			this.acreditar(costoDeMantenimiento);
+			
+		} catch (SaldoInsuficienteException e) {
+			
+			erroresBW.write("CBU: " + cuentas.get(i).getCBU() + ", Tipo De Cuenta: Caja De Ahorro, " +
+					monto + ", Motivo : Saldo insuficiente.\n");
+			
+		} catch (CuentaInhabilitadaException e) {
+			
+			erroresBW.write("CBU: " + cuentas.get(i).getCBU() + ", Tipo De Cuenta: Caja De Ahorro, " +
+					monto + ", Motivo : CuentaInhabilitada.\n");
+		}
+	}
+	
 
 	public Double getCOSTO_DE_MANTENIMIENTO() {
 		return costoDeMantenimiento;
@@ -75,5 +86,4 @@ public class CuentaMantenimiento extends Cuenta{
 	public void setCOSTO_DE_MANTENIMIENTO(Double costoDeMantenimiento) {
 		this.costoDeMantenimiento = costoDeMantenimiento;
 	}
-
 }

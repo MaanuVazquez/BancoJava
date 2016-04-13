@@ -133,9 +133,9 @@ public class Banco {
 
 	// Proceso Bach
 
-	public void cobroDeMantenimiento() {
+	public void cobroDeMantenimientos() {
 		try {
-			mantenimiento.cobrarMantenimiento();
+			mantenimiento.cobroDeMantenimientos();
 		} catch (IOException e) {
 			// TODO Bloque catch generado automáticamente
 			e.printStackTrace();
