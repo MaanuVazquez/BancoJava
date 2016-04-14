@@ -1,28 +1,19 @@
 package entidad.bancaria.cuentas;
 
 import entidad.bancaria.clientes.Cliente;
-import entidad.bancaria.excepciones.SaldoInsuficienteException;
-import entidad.bancaria.excepciones.SinClientesException;
 
-public class CajaDeAhorro extends Cuenta {
+public class CajaDeAhorro extends CuentaDeCliente {
 
 	private Cliente[] clientes;
 	private Double tasaDeInteres;
 	private Integer cbu;
 
-	public CajaDeAhorro(Cliente[] clientes, Double saldo, Double tasaDeInteres,
-			TipoDeMoneda tipoDeMoneda) throws SaldoInsuficienteException,
-			SinClientesException {
+	public CajaDeAhorro(Cliente[] clientes, Double saldo, Double tasaDeInteres, TipoDeMoneda tipoDeMoneda) {
 		super();
-		if (saldo <= 0) {
-			throw new SaldoInsuficienteException();
-		} else if (clientes == null) {
-			throw new SinClientesException();
-		}
 		this.clientes = clientes;
 		this.saldo = saldo;
 		this.tasaDeInteres = tasaDeInteres;
-		setTipoDeMoneda(tipoDeMoneda);
+		this.tipoDeMoneda = tipoDeMoneda;
 	}
 
 	public Integer getCBU() {

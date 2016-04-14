@@ -3,23 +3,16 @@ package entidad.bancaria.cuentas;
 import entidad.bancaria.banco.Banco;
 import entidad.bancaria.clientes.Cliente;
 import entidad.bancaria.excepciones.SaldoInsuficienteException;
-import entidad.bancaria.excepciones.SinClientesException;
 
-public class CuentaCorriente extends Cuenta {
+public class CuentaCorriente extends CuentaDeCliente {
 
 	private Cliente[] clientes;
 	private Double sobregiro;
 	private Integer cbu;
 	private static Double COMISION = 0.03;
 
-	public CuentaCorriente(Cliente[] clientes, Double saldo, Double sobregiro)
-			throws SaldoInsuficienteException, SinClientesException {
+	public CuentaCorriente(Cliente[] clientes, Double saldo, Double sobregiro){
 		super();
-		if (saldo <= 10000) {
-			throw new SaldoInsuficienteException();
-		} else if (clientes == null) {
-			throw new SinClientesException();
-		}
 		this.clientes = clientes;
 		this.saldo = saldo;
 		this.sobregiro = sobregiro;
@@ -57,7 +50,7 @@ public class CuentaCorriente extends Cuenta {
 	public void debitar(Double monto, String fecha, MotivoDeTransaccion motivo) throws SaldoInsuficienteException {
 
 		if ((monto * (1 + COMISION)) > (this.saldo + this.sobregiro)) {
-			throw new SaldoInsuficienteException();
+			throw new SaldoInsuficienteException(this.getCBU(), monto, this.saldo);
 		}
 		transacciones.add(new Transaccion(TipoDeMovimiento.DEBITO, monto, motivo, ""));
 		transacciones.add(new Transaccion(TipoDeMovimiento.DEBITO, monto * COMISION,

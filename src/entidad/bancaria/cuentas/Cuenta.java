@@ -2,36 +2,15 @@ package entidad.bancaria.cuentas;
 
 import java.util.ArrayList;
 
-import entidad.bancaria.excepciones.CuentaInhabilitadaException;
-import entidad.bancaria.excepciones.SaldoInsuficienteException;
+public class Cuenta {
 
-public abstract class Cuenta {
-
-	private static Integer CBU_MAX = 0;
-	private Integer cbu;
-	private boolean habilitada;
 	protected ArrayList<Transaccion> transacciones;
 	protected Double saldo;
-	private TipoDeMoneda tipoDeMoneda;
+	protected TipoDeMoneda tipoDeMoneda;
 
-	protected Cuenta() {
-		cbu = CBU_MAX;
-		CBU_MAX++;
-		setHabilitada(true);
+	public Cuenta() {
 		saldo = 0.0;
 		tipoDeMoneda = TipoDeMoneda.PESO;
-	}
-
-	public Integer getCBU() {
-		return cbu;
-	}
-
-	public boolean isHabilitada() {
-		return habilitada;
-	}
-
-	public void setHabilitada(boolean habilitada) {
-		this.habilitada = habilitada;
 	}
 
 	public ArrayList<Transaccion> getTransacciones() {
@@ -46,37 +25,8 @@ public abstract class Cuenta {
 		return this.tipoDeMoneda;
 	}
 
-	// estoy podrido de escribir tipodeMoneda
-	public void setTipoDeMoneda(TipoDeMoneda tipoDeMoneda) {
-		this.tipoDeMoneda = tipoDeMoneda;
-	}
-
-	public void acreditar(Double monto) throws CuentaInhabilitadaException {
-		if (!this.isHabilitada()) {
-			throw new CuentaInhabilitadaException();
-		}
+	public void acreditar(Double monto, MotivoDeTransaccion motivo) {
 		this.saldo += monto;
-	}
-
-	public void debitar(Double monto) throws SaldoInsuficienteException,
-			CuentaInhabilitadaException {
-		if (!this.isHabilitada()) {
-			throw new CuentaInhabilitadaException();
-		}
-		if (monto > this.saldo) {
-			throw new SaldoInsuficienteException();
-		}
-		this.saldo -= monto;
-	}
-
-	public void crearTransaccion(TipoDeMovimiento movimiento, Double monto,
-			MotivoDeTransaccion motivo) {
-		this.transacciones.add(new Transaccion(movimiento, monto, motivo));
-	}
-
-	public void crearTransaccion(TipoDeMovimiento movimiento, Double monto,
-			MotivoDeTransaccion motivo, String observaciones) {
-		this.transacciones.add(new Transaccion(movimiento, monto, motivo,
-				observaciones));
+		this.transacciones.add(new Transaccion(TipoDeMovimiento.CREDITO, monto, motivo));
 	}
 }

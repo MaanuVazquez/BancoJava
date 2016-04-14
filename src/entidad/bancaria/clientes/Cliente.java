@@ -3,7 +3,7 @@ package entidad.bancaria.clientes;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import entidad.bancaria.cuentas.Cuenta;
+import entidad.bancaria.cuentas.CuentaDeCliente;
 
 public abstract class Cliente {
 
@@ -11,36 +11,37 @@ public abstract class Cliente {
 	private String nombreORazonSocial;
 	private String telefono;
 	private Domicilio domicilio;
-	private HashSet<Cuenta> cuentas;
-	private boolean habilitado;
+	private HashSet<CuentaDeCliente> cuentas;
+	private boolean activo;
 
 	protected Cliente(String CUIT, String nombreORazonSocial, Domicilio domicilio, String telefono) {
 		this.CUIT = CUIT;
 		this.nombreORazonSocial = nombreORazonSocial;
 		this.setDomicilio(domicilio);
 		this.setTelefono(telefono);
-		this.habilitado = true;
+		this.activo = true;
 	}
 
-	public boolean isHabilitado() {
-		return habilitado;
+	public boolean isActivo() {
+		return activo;
 	}
 
-	public void deshabilitar() {
+	public boolean darDeBaja() {
 		boolean cuentaHabilitada = false;
 		if (!cuentas.isEmpty()) {
-			Iterator<Cuenta> iterador = cuentas.iterator();
-			Cuenta cuenta;
+			Iterator<CuentaDeCliente> iterador = cuentas.iterator();
+			CuentaDeCliente cuenta;
 			while (iterador.hasNext() && !cuentaHabilitada) {
 				cuenta = iterador.next();
 				cuentaHabilitada = cuenta.isHabilitada();
 			}
 		}
-		this.habilitado = cuentaHabilitada;
+		this.activo = cuentaHabilitada;
+		return !activo;
 	}
 
-	public void habilitar() {
-		this.habilitado = true;
+	public void activar() {
+		this.activo = true;
 	}
 
 	public String getTelefono() {
@@ -67,17 +68,17 @@ public abstract class Cliente {
 		return CUIT;
 	}
 
-	public HashSet<Cuenta> getCuentas() {
+	public HashSet<CuentaDeCliente> getCuentas() {
 		return cuentas;
 	}
 
-	public void asignarCuenta(Cuenta cuenta) {
+	public void asignarCuenta(CuentaDeCliente cuenta) {
 		cuentas.add(cuenta);
 	}
 
-	public void removerCuenta(Cuenta cuenta) {
-		Iterator<Cuenta> iterador = cuentas.iterator();
-		Cuenta cuentaTemporal = iterador.next();
+	public void removerCuenta(CuentaDeCliente cuenta) {
+		Iterator<CuentaDeCliente> iterador = cuentas.iterator();
+		CuentaDeCliente cuentaTemporal = iterador.next();
 		while (iterador.hasNext() && cuentaTemporal != cuenta) {
 			cuenta = iterador.next();
 		}
@@ -119,7 +120,7 @@ public abstract class Cliente {
 				return false;
 		} else if (!domicilio.equals(other.domicilio))
 			return false;
-		if (habilitado != other.habilitado)
+		if (activo != other.activo)
 			return false;
 		if (nombreORazonSocial == null) {
 			if (other.nombreORazonSocial != null)
