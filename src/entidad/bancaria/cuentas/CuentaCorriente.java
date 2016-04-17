@@ -8,18 +8,13 @@ public class CuentaCorriente extends CuentaDeCliente {
 
 	private Cliente[] clientes;
 	private Double sobregiro;
-	private Integer cbu;
 	private static Double COMISION = 0.03;
 
-	public CuentaCorriente(Cliente[] clientes, Double saldo, Double sobregiro){
+	public CuentaCorriente(Cliente[] clientes, Double saldo, Double sobregiro) {
 		super();
 		this.clientes = clientes;
 		this.saldo = saldo;
 		this.sobregiro = sobregiro;
-	}
-
-	public Integer getCBU() {
-		return cbu;
 	}
 
 	public Double getSobregiro() {

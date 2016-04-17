@@ -92,7 +92,7 @@ public abstract class Cliente {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((CUIT == null) ? 0 : CUIT.hashCode());
-	
+
 		return result;
 	}
 
@@ -134,6 +134,5 @@ public abstract class Cliente {
 			return false;
 		return true;
 	}
-	
-	
+
 }

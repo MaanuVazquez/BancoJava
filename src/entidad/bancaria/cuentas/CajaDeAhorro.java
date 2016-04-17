@@ -6,7 +6,6 @@ public class CajaDeAhorro extends CuentaDeCliente {
 
 	private Cliente[] clientes;
 	private Double tasaDeInteres;
-	private Integer cbu;
 
 	public CajaDeAhorro(Cliente[] clientes, Double saldo, Double tasaDeInteres, TipoDeMoneda tipoDeMoneda) {
 		super();
@@ -14,10 +13,6 @@ public class CajaDeAhorro extends CuentaDeCliente {
 		this.saldo = saldo;
 		this.tasaDeInteres = tasaDeInteres;
 		this.tipoDeMoneda = tipoDeMoneda;
-	}
-
-	public Integer getCBU() {
-		return cbu;
 	}
 
 	public Double getTasaDeInteres() {
