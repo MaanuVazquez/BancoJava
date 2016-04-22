@@ -6,8 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map.Entry;
+import java.util.HashSet;
 
 import entidad.bancaria.cuentas.CajaDeAhorro;
 import entidad.bancaria.cuentas.MotivoDeTransaccion;
@@ -19,7 +18,7 @@ public class ProcesoBatch {
 
 	private static Double costoDeMantenimiento = 0.0;
 
-	public static void cobroDeMantenimientos(HashMap<Integer, CajaDeAhorro> cuentas) throws IOException {
+	public static void cobroDeMantenimientos(HashSet<CajaDeAhorro> cuentas) throws IOException {
 		String fecha = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 		File cobrados = new File("MantenimientosCobrados " + fecha + ".txt");
 		File errores = new File("ErroresMantenimiento " + fecha + ".txt");
@@ -28,10 +27,10 @@ public class ProcesoBatch {
 		BufferedWriter cobradosBW = new BufferedWriter(new FileWriter(cobrados));
 		BufferedWriter erroresBW = new BufferedWriter(new FileWriter(errores));
 
-		for (Entry<Integer, CajaDeAhorro> cuenta : cuentas.entrySet()) {
+		for (CajaDeAhorro cuenta : cuentas) {
 
-			debitarMantenimiento(cuenta.getValue(), cobradosBW, erroresBW);
-			
+			debitarMantenimiento(cuenta, cobradosBW, erroresBW);
+
 		}
 
 		cobradosBW.close();

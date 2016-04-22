@@ -11,6 +11,7 @@ public class Cuenta {
 	public Cuenta() {
 		saldo = 0.0;
 		tipoDeMoneda = TipoDeMoneda.PESO;
+		this.transacciones = new ArrayList<Transaccion>();
 	}
 
 	public ArrayList<Transaccion> getTransacciones() {
