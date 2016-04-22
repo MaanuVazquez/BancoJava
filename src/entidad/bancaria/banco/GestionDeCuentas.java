@@ -1,5 +1,9 @@
 package entidad.bancaria.banco;
 
+import entidad.bancaria.clientes.Cliente;
+import entidad.bancaria.clientes.PersonaFisica;
+import entidad.bancaria.cuentas.CajaDeAhorro;
+import entidad.bancaria.cuentas.CuentaCorriente;
 import entidad.bancaria.cuentas.TipoDeMoneda;
 import entidad.bancaria.excepciones.CBUInexistenteException;
 import entidad.bancaria.excepciones.ClienteInexistenteException;
@@ -17,19 +21,20 @@ public class GestionDeCuentas {
 	 * @return : Numero de CBU de la cuenta creada. Devuelve 0 en caso de no poder crear la cuenta.
 	 */
 	
-	public static int aperturaDeCajaDeAhorro(String[] cuits, Double saldo,
-			Double tasaDeInteres, TipoDeMoneda tipoDeMoneda){
-		// falta validacion de persona fisica
-		try {
-			return Banco.crearCajaDeAhorro(cuits, saldo, tasaDeInteres, tipoDeMoneda);
-		} catch (DepositoInicialInvalidoException e) {
-			System.out.println(e);
-		} catch (SinClientesException e) {
-			System.out.println(e);
-		} catch (ClienteInexistenteException e) {
-			System.out.println(e);
+	public static CajaDeAhorro crearCajaDeAhorro(String[] cuits, Double saldo, Double tasaDeInteres, TipoDeMoneda tipoDeMoneda)
+			throws DepositoInicialInvalidoException, SinClientesException, ClienteInexistenteException {
+		if (cuits.length == 0) {
+			throw new SinClientesException();
 		}
-		return 0;
+		PersonaFisica[] titulares = new PersonaFisica[cuits.length];
+		for (int i = 0; i < cuits.length; i++) {
+			titulares[i] = Banco.buscarPersonaFisica(cuits[i]);
+		}
+		if (saldo <= 0) {
+			throw new DepositoInicialInvalidoException(saldo, 1.0);
+		}
+		CajaDeAhorro cuenta = new CajaDeAhorro(titulares, saldo, tasaDeInteres, tipoDeMoneda);
+		return cuenta;
 	}
 	
 	/**
@@ -43,31 +48,30 @@ public class GestionDeCuentas {
 	 * @throws SinClientesException
 	 */
 	
-	public int aperturaDeCuentaCorriente(String[] cuits, Double saldo, Double sobregiro) {
-		
-		try {
-			return Banco.crearCuentaCorriente(cuits, saldo, sobregiro);
-		} catch (DepositoInicialInvalidoException e) {
-			System.out.println(e);
-		} catch (ClienteInexistenteException e) {
-			System.out.println(e);
-		} catch (SinClientesException e) {
-			System.out.println(e);
+	public static CuentaCorriente crearCuentaCorriente(String[] cuits, Double saldo, Double sobregiro)
+			throws DepositoInicialInvalidoException, ClienteInexistenteException, SinClientesException {
+		if (cuits.length == 0) {
+			throw new SinClientesException();
 		}
-		return 0;
+		Cliente[] titulares = new Cliente[cuits.length];
+		for (int i = 0; i < cuits.length; i++) {
+			titulares[i] = Banco.buscarCliente(cuits[i]);
+		}
+		if (saldo < 10000) {
+			throw new DepositoInicialInvalidoException(saldo, 10000.0);
+		}
+		CuentaCorriente cuenta = new CuentaCorriente(titulares, saldo, sobregiro);
+		return cuenta;
 	}
 	
 	/**
 	 * Inhabilita una cuenta para impedir que realize movimientos.
 	 * @param cbu : CBU de la cuenta que se desea inhabilitar.
+	 * @throws CBUInexistenteException 
 	 */
 	
-	public void inhabilitarCuenta(int cbu){
-		try {
-			Banco.inhabilitarCuenta(cbu);
-		} catch (CBUInexistenteException e) {
-			System.out.println(e);
-		}
+	public static void inhabilitarCuenta(int cbu) throws CBUInexistenteException{
+		Banco.buscarCuenta(cbu).setHabilitada(false);
 	}
 	
 	/**
@@ -76,11 +80,7 @@ public class GestionDeCuentas {
 	 * @throws CBUInexistenteException 
 	 */
 	
-	public void habilitarCuenta(int cbu){
-		try {
-			Banco.habilitarCuenta(cbu);
-		} catch (CBUInexistenteException e) {
-			System.out.println(e);
-		}
+	public static void habilitarCuenta(int cbu) throws CBUInexistenteException{
+		Banco.buscarCuenta(cbu).setHabilitada(true);
 	}
 }

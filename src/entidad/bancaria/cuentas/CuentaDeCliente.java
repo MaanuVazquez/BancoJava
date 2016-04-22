@@ -1,5 +1,6 @@
 package entidad.bancaria.cuentas;
 
+import entidad.bancaria.clientes.Cliente;
 import entidad.bancaria.excepciones.CuentaInhabilitadaException;
 import entidad.bancaria.excepciones.SaldoInsuficienteException;
 
@@ -8,14 +9,20 @@ public class CuentaDeCliente extends Cuenta{
 	private static Integer CBU_MAX = 1;
 	private Integer cbu;
 	private boolean habilitada;
+	private Cliente[] clientes;
 	
-	public CuentaDeCliente(){
+	public CuentaDeCliente(Cliente[] clientes){
 		cbu = CBU_MAX;
 		CBU_MAX++;
+		this.clientes = clientes;
 	}
 
 	public Integer getCBU() {
 		return cbu;
+	}
+	
+	public Cliente[] getClientes(){
+		return clientes;
 	}
 
 	public boolean isHabilitada() {
@@ -23,6 +30,11 @@ public class CuentaDeCliente extends Cuenta{
 	}
 
 	public void setHabilitada(boolean habilitada) {
+		if(this.habilitada == false){
+			for(Cliente cliente : clientes){
+				cliente.activar();
+			}
+		}
 		this.habilitada = habilitada;
 	}
 	

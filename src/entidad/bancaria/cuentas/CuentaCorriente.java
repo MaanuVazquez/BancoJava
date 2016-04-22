@@ -6,23 +6,17 @@ import entidad.bancaria.excepciones.SaldoInsuficienteException;
 
 public class CuentaCorriente extends CuentaDeCliente {
 
-	private Cliente[] clientes;
 	private Double sobregiro;
 	private static Double COMISION = 0.03;
 
 	public CuentaCorriente(Cliente[] clientes, Double saldo, Double sobregiro) {
-		super();
-		this.clientes = clientes;
+		super(clientes);
 		this.saldo = saldo;
 		this.sobregiro = sobregiro;
 	}
 
 	public Double getSobregiro() {
 		return sobregiro;
-	}
-
-	public Cliente[] getClientes() {
-		return clientes;
 	}
 
 	public static Double getComision() {

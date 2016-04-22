@@ -1,105 +1,163 @@
 package entidad.bancaria.banco;
 
+import entidad.bancaria.cuentas.CajaDeAhorro;
+import entidad.bancaria.cuentas.CuentaDeCliente;
+import entidad.bancaria.cuentas.MotivoDeTransaccion;
+import entidad.bancaria.cuentas.TipoDeMoneda;
 import entidad.bancaria.cuentas.Transaccion;
 import entidad.bancaria.excepciones.CBUInexistenteException;
 import entidad.bancaria.excepciones.CuentaInhabilitadaException;
 import entidad.bancaria.excepciones.NumeroDeMovimientosInvalidosException;
 import entidad.bancaria.excepciones.SaldoInsuficienteException;
 
-/*
- * Operatoria Bancaria: Operaciones por ventanilla
- */
-
-	public class OperacionPorVentanilla {
+public class OperacionPorVentanilla {
 
 	/**
 	 * Acredita en la cuenta con el CBU indicado un monto de dinero.
-	 * @param cbu : Numero de cuenta
-	 * @param monto : Cantidad de dinero a depositar en moneda de la cuenta.
+	 * 
+	 * @param cbu
+	 *            : Numero de cuenta
+	 * @param monto
+	 *            : Cantidad de dinero a depositar en moneda de la cuenta.
+	 * @throws CBUInexistenteException
+	 * @throws CuentaInhabilitadaException
 	 */
 
-	public void depositoEnEfectivo(int cbu, Double monto) {
-		try {
-			Banco.depositoEnEfectivo(cbu, monto);
-		} catch (CBUInexistenteException e) {
-			System.out.println(e);
-		} catch (CuentaInhabilitadaException e) {
-			System.out.println(e);
+	public static void depositoEnEfectivo(int cbu, Double monto)
+			throws CBUInexistenteException, CuentaInhabilitadaException {
+		CuentaDeCliente cuentaDestino;
+		cuentaDestino = Banco.buscarCuenta(cbu);
+		if (!cuentaDestino.isHabilitada()) {
+			throw new CuentaInhabilitadaException(cbu);
+		}
+		cuentaDestino.acreditar(monto,
+				MotivoDeTransaccion.DEPOSITO_POR_VENTANILLA);
+	}
+
+	/**
+	 * Debita en la cuenta con el CBU indicado un monto de dinero. Solo
+	 * permitido para Cajas De Ahorro.
+	 * 
+	 * @param cbu
+	 *            Numero de cuenta.
+	 * @param monto
+	 *            : Cantidad de dinero a retirar en moneda de la cuenta.
+	 * @throws CuentaInhabilitadaException
+	 * @throws SaldoInsuficienteException
+	 * @throws CBUInexistenteException
+	 */
+
+	public static void extraccionEnEfectivoEnCajaDeAhorro(int cbu, Double monto)
+			throws SaldoInsuficienteException, CuentaInhabilitadaException,
+			CBUInexistenteException {
+		CajaDeAhorro cuentaDestino;
+		cuentaDestino = Banco.buscarCajaDeAhorro(cbu);
+		cuentaDestino.debitar(monto,
+				MotivoDeTransaccion.EXTRACCION_POR_VENTANILLA);
+	}
+
+	/**
+	 * Transfiere una suma de dinero de una cuenta a otra, en caso de que las
+	 * cuentas esten valoradas en distinto tipo de moneda se realizara la
+	 * conversion utilizando la cotizacion actual, utilizando como base el monto
+	 * de la cuenta de origen de la transacción.
+	 * 
+	 * @param CBUdelOrigen
+	 *            : CBU de la cuenta que transfiere el dinero.
+	 * @param CBUdelDestino
+	 *            : CBU de la cuenta que recibe el dinero.
+	 * @param monto
+	 *            : Cantidad de dinero a transferir en moneda de la cuenta de
+	 *            origen.
+	 * @throws CBUInexistenteException
+	 * @throws CuentaInhabilitadaException
+	 * @throws SaldoInsuficienteException
+	 */
+
+	public static void transferencia(int cbuDelOrigen, int cbuDelDestino,
+			Double monto) throws CBUInexistenteException,
+			CuentaInhabilitadaException, SaldoInsuficienteException {
+
+		CuentaDeCliente cuentaOrigen;
+		CuentaDeCliente cuentaDestino;
+		cuentaOrigen = Banco.buscarCuenta(cbuDelOrigen);
+		cuentaDestino = Banco.buscarCuenta(cbuDelDestino);
+
+		if (!cuentaDestino.isHabilitada())
+			throw new CuentaInhabilitadaException(cbuDelDestino);
+
+		cuentaOrigen.debitar(monto, MotivoDeTransaccion.TRANSFERENCIA);
+
+		if (cuentaDestino.getTipoDeMoneda() == cuentaOrigen.getTipoDeMoneda()) {
+			cuentaDestino.acreditar(monto, MotivoDeTransaccion.TRANSFERENCIA);
+		} else if (cuentaOrigen.getTipoDeMoneda() == TipoDeMoneda.PESO) {
+			monto = monto / Banco.getCotizacion();
+			cuentaDestino.acreditar(monto, MotivoDeTransaccion.TRANSFERENCIA,
+					"Conversión de Peso Argentino(ARS) a Dolar(USD): " + monto
+							+ " Cotización: 1 ARS - " + Banco.getCotizacion()
+							+ " USD");
+		} else {
+			monto = monto * Banco.getCotizacion();
+			cuentaDestino.acreditar(monto, MotivoDeTransaccion.TRANSFERENCIA,
+					"Conversión de Dolar(USD) a Peso Argentino(ARS): " + monto
+							+ " Cotización: 1 ARS - " + Banco.getCotizacion()
+							+ " USD");
 		}
 	}
 
 	/**
-	 * Debita en la cuenta con el CBU indicado un monto de dinero. Solo permitido para Cajas De Ahorro.
-	 * @param cbu Numero de cuenta
-	 * @param monto : Cantidad de dinero a retirar en moneda de la cuenta.
+	 * Lista todos los movimientos realizados de la cuenta.
+	 * 
+	 * @param CBU
+	 *            : CBU de la cuenta que se desea obtener los movimientos.
+	 * @return Arreglo de todas las transacciones de la cuenta. Devuelve un
+	 *         arreglo vacio en caso de recibir un cbu invalido.
+	 * @throws CBUInexistenteException
 	 */
 
-	public void extraccionEnEfectivo(int cbu, Double monto) {
-		try {
-			Banco.extraccionEnEfectivo(cbu, monto);
-		} catch (CBUInexistenteException e) {
-			System.out.println(e);
-		} catch (CuentaInhabilitadaException e) {
-			System.out.println(e);
-		} catch (SaldoInsuficienteException e) {
-			System.out.println(e);
-		}
-	}
-
-	/**
-	 * Transfiere una suma de dinero de una cuenta a otra, en caso de que las cuentas esten valoradas 
-	 * en distinto tipo de moneda se realizara la conversion utilizando la cotizacion acutal,
-	 * utilizando como base el monto de la cuenta de origen de la transaccion.
-	 * @param CBUdelOrigen : CBU de la cuenta que transfiere el dinero.
-	 * @param CBUdelDestino : CBU de la cuenta que recibe el dinero.
-	 * @param monto : Cantidad de dinero a transferir en moneda de la cuenta de origen.
-	 */
-
-	public void transferenciaAOtraCuenta (int CBUDelOrigen, int CBUDelDestino, Double monto){
-		try {
-			Banco.transferencia(CBUDelOrigen, CBUDelDestino, monto);
-		} catch (CBUInexistenteException e) {
-			System.out.println(e);
-		} catch (CuentaInhabilitadaException e) {
-			System.out.println(e);;
-		} catch (SaldoInsuficienteException e) {
-			System.out.println(e);
-		}
-	}
-
-	/**
-	 * Lista todos los movimientos realizados de la cuenta
-	 * @param CBU : CBU de la cuenta que se desea obtener los movimientos
-	 * @return Arreglo de todas las transacciones de la cuenta. Devuelve un arreglo vacio en caso de recibir un cbu invalido.
-	 */
-
-	public static Transaccion[] listarMovimientosDeCuenta(int cbu) {
-		try {
-			return Banco.listarTodosLosMovimientosDeCuenta(cbu);
-		} catch (CBUInexistenteException e) {
-			System.out.println(e);
-		}
-		return new Transaccion[0];
+	public static Transaccion[] listarTodosLosMovimientosDeCuenta(int cbu)
+			throws CBUInexistenteException {
+		CuentaDeCliente cuenta;
+		cuenta = Banco.buscarCuenta(cbu);
+		return (Transaccion[]) cuenta.getTransacciones().toArray();
 	}
 
 	/**
 	 * Lista los ultimos CANTIDADDEMOVIMIENTOS movimientos de la cuenta.
-	 * @param CBU : CBU de la cuenta que se desea obtener los movimientos.
-	 * @param cantidadDeMovimientos : cantidad de movimientos que se desea obtener.
-	 * @return Arreglo de las ultimas CANTIDADDEMOVIMIENTOS transacciones de la cuenta. 
-	 * En caso de tener menos transacciones que CANTIDADDEMOVIMIENTOS devuelve todas sus transacciones.
-	 * Devuelve un arreglo vacio en caso de recibir un cbu invalido.
+	 * 
+	 * @param CBU
+	 *            : CBU de la cuenta que se desea obtener los movimientos.
+	 * @param cantidadDeMovimientos
+	 *            : cantidad de movimientos que se desea obtener.
+	 * @return : Arreglo de las ultimas CANTIDADDEMOVIMIENTOS transacciones de
+	 *         la cuenta. En caso de tener menos transacciones que
+	 *         CANTIDADDEMOVIMIENTOS devuelve todas sus transacciones. Devuelve
+	 *         un arreglo vacio en caso de recibir un cbu invalido.
+	 * @throws CBUInexistenteException
+	 * @throws NumeroDeMovimientosInvalidosException
 	 */
 
-	public static Transaccion[] listarMovimientosDeCuenta(int cbu, int cantidadDeMovimientos) {
-		Transaccion[] ultimasTransacciones = new Transaccion[0];
-		try {
-			ultimasTransacciones = Banco.listarLosUltimosMovimientosDeCuenta(cbu, cantidadDeMovimientos);
-		} catch (CBUInexistenteException e) {
-			System.out.println(e);
-		} catch (NumeroDeMovimientosInvalidosException e) {
-			System.out.println(e);
+	public static Transaccion[] listarLosUltimosMovimientosDeCuenta(int cbu,
+			int cantidadDeMovimientos) throws CBUInexistenteException,
+			NumeroDeMovimientosInvalidosException {
+
+		CuentaDeCliente cuenta;
+		cuenta = Banco.buscarCuenta(cbu);
+		if (cantidadDeMovimientos < 1) {
+			throw new NumeroDeMovimientosInvalidosException(
+					cantidadDeMovimientos);
 		}
-		return ultimasTransacciones;
+		if (cantidadDeMovimientos > cuenta.getTransacciones().size()) {
+			cantidadDeMovimientos = cuenta.getTransacciones().size();
+		}
+
+		Transaccion[] ultimosMovimientos = new Transaccion[cantidadDeMovimientos];
+
+		for (int i = (cuenta.getTransacciones().size()) - cantidadDeMovimientos; i < cuenta
+				.getTransacciones().size(); i++) {
+			ultimosMovimientos[i] = cuenta.getTransacciones().get(i);
+		}
+
+		return ultimosMovimientos;
 	}
 }
