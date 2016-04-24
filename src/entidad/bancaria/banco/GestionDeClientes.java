@@ -1,6 +1,7 @@
 package entidad.bancaria.banco;
 
 import entidad.bancaria.clientes.Cliente;
+import entidad.bancaria.excepciones.CUITInvalidoException;
 import entidad.bancaria.excepciones.ClienteInexistenteException;
 
 public class GestionDeClientes {
@@ -10,9 +11,10 @@ public class GestionDeClientes {
 	 * @param cuit : Clave Única de Identificación Tributaria.
 	 * @return : true si el cliente paso a estado inactivo, false si tenia una cuenta activa.
 	 * @throws ClienteInexistenteException 
+	 * @throws CUITInvalidoException 
 	 */
 	
-	public static boolean bajaDeCliente(String cuit) throws ClienteInexistenteException{
+	public static boolean bajaDeCliente(String cuit) throws ClienteInexistenteException, CUITInvalidoException{
 		Cliente cliente = Banco.buscarCliente(cuit);
 		return cliente.darDeBaja();
 	}
@@ -20,9 +22,10 @@ public class GestionDeClientes {
 	/**
 	 * Activa un cliente que habia sido dado de baja anteriormente.
 	 * @param cuit : Clave Única de Identificación Tributaria.
+	 * @throws CUITInvalidoException 
 	 */
 	
-	public static void altaCliente(String cuit) throws ClienteInexistenteException{
+	public static void altaCliente(String cuit) throws ClienteInexistenteException, CUITInvalidoException{
 		Banco.buscarCliente(cuit).activar();
 	}
 	
@@ -37,7 +40,7 @@ public class GestionDeClientes {
 	public static Cliente buscarCliente(String cuit){
 		try {
 			return Banco.buscarCliente(cuit);
-		} catch (ClienteInexistenteException e) {
+		} catch (ClienteInexistenteException | CUITInvalidoException e) {
 			System.out.println(e);
 			return null;
 		}

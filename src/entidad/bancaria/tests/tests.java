@@ -51,7 +51,7 @@ public class tests {
 
 	@Test
 	public void testCrearCuentaSinClientes()
-			throws DepositoInicialInvalidoException, ClienteInexistenteException, SinClientesException {
+			throws DepositoInicialInvalidoException, ClienteInexistenteException, SinClientesException, CUITInvalidoException {
 
 		excepcionEsperada.expect(SinClientesException.class);
 		String[] cuits = new String[0];
@@ -61,7 +61,7 @@ public class tests {
 
 	@Test
 	public void testCuentaCorrienteSaldoMenorA10000()
-			throws DepositoInicialInvalidoException, ClienteInexistenteException, SinClientesException {
+			throws DepositoInicialInvalidoException, ClienteInexistenteException, SinClientesException, CUITInvalidoException {
 
 		excepcionEsperada.expect(DepositoInicialInvalidoException.class);
 		String[] clientesCuentaCorriente = new String[] { "20000000002" };

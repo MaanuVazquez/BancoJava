@@ -17,14 +17,14 @@ public abstract class Cliente {
 
 	protected Cliente(String CUIT, String nombreORazonSocial, Domicilio domicilio, String telefono)
 			throws CUITInvalidoException {
-		chequearCUIT(CUIT);
+		this.CUIT = chequearCUIT(CUIT);
 		this.nombreORazonSocial = nombreORazonSocial;
 		this.setDomicilio(domicilio);
 		this.setTelefono(telefono);
 		this.activo = true;
 	}
 
-	public void chequearCUIT(String CUIT) throws CUITInvalidoException {
+	public static String chequearCUIT(String CUIT) throws CUITInvalidoException {
 
 		CUIT = CUIT.replaceAll("[^\\d]", "");
 
@@ -32,7 +32,7 @@ public abstract class Cliente {
 			throw new CUITInvalidoException();
 		}
 
-		this.CUIT = CUIT;
+		return CUIT;
 
 	}
 

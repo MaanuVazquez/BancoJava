@@ -1,5 +1,7 @@
 package entidad.bancaria.clientes;
 
+import entidad.bancaria.excepciones.CUITInvalidoException;
+
 public class PersonaFisica extends Cliente{
 
 	private String tipoDeDocumento;
@@ -9,7 +11,7 @@ public class PersonaFisica extends Cliente{
 	private String nombreYApellidoDelConyuge;
 
 	public PersonaFisica(String CUIT, String nombreORazonSocial, Domicilio domicilio, String telefono,
-			String tipoDeDocumento, String numeroDeDocumento, String estadoCivil, String profesion ,String nombreYApellidoDelConyuge){
+			String tipoDeDocumento, String numeroDeDocumento, String estadoCivil, String profesion ,String nombreYApellidoDelConyuge) throws CUITInvalidoException{
 		super(CUIT, nombreORazonSocial, domicilio, telefono);
 		this.tipoDeDocumento = tipoDeDocumento;
 		this.numeroDeDocumento = numeroDeDocumento;

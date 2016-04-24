@@ -149,10 +149,11 @@ public class Banco {
 	 * @throws ClienteInexistenteException
 	 * @throws SinClientesException
 	 * @throws DepositoInicialInvalidoException
+	 * @throws CUITInvalidoException 
 	 */
 
 	public static int crearCajaDeAhorro(String[] cuits, Double saldo, Double tasaDeInteres, TipoDeMoneda tipoDeMoneda)
-			throws DepositoInicialInvalidoException, SinClientesException, ClienteInexistenteException {
+			throws DepositoInicialInvalidoException, SinClientesException, ClienteInexistenteException, CUITInvalidoException {
 
 		CajaDeAhorro cuenta;
 
@@ -178,10 +179,11 @@ public class Banco {
 	 * @throws SinClientesException
 	 * @throws ClienteInexistenteException
 	 * @throws DepositoInicialInvalidoException
+	 * @throws CUITInvalidoException 
 	 */
 
 	public static int crearCuentaCorriente(String[] cuits, Double saldo, Double sobregiro)
-			throws DepositoInicialInvalidoException, ClienteInexistenteException, SinClientesException {
+			throws DepositoInicialInvalidoException, ClienteInexistenteException, SinClientesException, CUITInvalidoException {
 		CuentaCorriente cuenta;
 
 		cuenta = GestionDeCuentas.crearCuentaCorriente(cuits, saldo, sobregiro);
@@ -321,7 +323,7 @@ public class Banco {
 
 	public static void agregarPersonaJuridica(String CUIT, String razonSocial, Domicilio domicilio, String telefono,
 			String fechaDelContratoSocial) throws CUITInvalidoException, CUITYaAsignadoException {
-
+			
 		if (!Banco.clientes.add(new PersonaJuridica(CUIT, razonSocial, domicilio, telefono, fechaDelContratoSocial))) {
 
 			throw new CUITYaAsignadoException(CUIT);
@@ -339,9 +341,10 @@ public class Banco {
 	 * @return : true si el cliente paso a estado inactivo, false si tenia una
 	 *         cuenta activa.
 	 * @throws ClienteInexistenteException
+	 * @throws CUITInvalidoException 
 	 */
 
-	public static boolean bajaCliente(String cuit) throws ClienteInexistenteException {
+	public static boolean bajaCliente(String cuit) throws ClienteInexistenteException, CUITInvalidoException {
 
 		return GestionDeClientes.bajaDeCliente(cuit);
 
@@ -353,9 +356,10 @@ public class Banco {
 	 * @param cuit
 	 *            : Clave Única de Identificación Tributaria.
 	 * @throws ClienteInexistenteException
+	 * @throws CUITInvalidoException 
 	 */
 
-	public static void activarCliente(String cuit) throws ClienteInexistenteException {
+	public static void activarCliente(String cuit) throws ClienteInexistenteException, CUITInvalidoException {
 
 		GestionDeClientes.altaCliente(cuit);
 
@@ -369,11 +373,14 @@ public class Banco {
 	 *            : Clave Única de Identificación Tributaria.
 	 * @return : Devuelve el cliente con el cuit recibido
 	 * @throws ClienteInexistenteException
+	 * @throws CUITInvalidoException 
 	 */
 
-	public static Cliente buscarCliente(String cuit) throws ClienteInexistenteException {
+	public static Cliente buscarCliente(String cuit) throws ClienteInexistenteException, CUITInvalidoException {
 		Cliente cliente = null;
-
+		
+		cuit = Cliente.chequearCUIT(cuit);
+		
 		for (Cliente c : Banco.clientes) {
 			if (c.getCUIT() == cuit)
 				cliente = c;
@@ -393,10 +400,13 @@ public class Banco {
 	 *            : Clave Única de Identificación Tributaria.
 	 * @return : Devuelve el cliente con el cuit recibido
 	 * @throws ClienteInexistenteException
+	 * @throws CUITInvalidoException 
 	 */
 
-	public static PersonaFisica buscarPersonaFisica(String cuit) throws ClienteInexistenteException {
+	public static PersonaFisica buscarPersonaFisica(String cuit) throws ClienteInexistenteException, CUITInvalidoException {
 		PersonaFisica cliente = null;
+		
+		cuit = Cliente.chequearCUIT(cuit);
 
 		for (PersonaFisica p : Banco.personasFisicas) {
 			if (p.getCUIT() == cuit)
