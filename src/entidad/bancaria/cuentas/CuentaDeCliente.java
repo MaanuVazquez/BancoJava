@@ -1,5 +1,7 @@
 package entidad.bancaria.cuentas;
 
+import java.util.Arrays;
+
 import entidad.bancaria.clientes.Cliente;
 import entidad.bancaria.excepciones.CuentaInhabilitadaException;
 import entidad.bancaria.excepciones.SaldoInsuficienteException;
@@ -54,6 +56,34 @@ public class CuentaDeCliente extends Cuenta {
 	public void acreditar(Double monto, MotivoDeTransaccion motivo, String observaciones) {
 		this.saldo += monto;
 		this.transacciones.add(new Transaccion(TipoDeMovimiento.CREDITO, monto, motivo, observaciones));
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((cbu == null) ? 0 : cbu.hashCode());
+		result = prime * result + Arrays.hashCode(clientes);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CuentaDeCliente other = (CuentaDeCliente) obj;
+		if (cbu == null) {
+			if (other.cbu != null)
+				return false;
+		} else if (!cbu.equals(other.cbu))
+			return false;
+		if (!Arrays.equals(clientes, other.clientes))
+			return false;
+		return true;
 	}
 
 }

@@ -35,14 +35,15 @@ public class Banco {
 	 *            : Numero de cuenta
 	 * @param monto
 	 *            : Cantidad de dinero a depositar en moneda de la cuenta.
+	 * @throws CuentaInhabilitadaException
+	 * @throws CBUInexistenteException
 	 */
 
-	public static void depositoEnEfectivo(int cbu, Double monto) {
-		try {
-			OperacionPorVentanilla.depositoEnEfectivo(cbu, monto);
-		} catch (CBUInexistenteException | CuentaInhabilitadaException e) {
-			System.err.println(e);
-		}
+	public static void depositoEnEfectivo(int cbu, Double monto)
+			throws CBUInexistenteException, CuentaInhabilitadaException {
+
+		OperacionPorVentanilla.depositoEnEfectivo(cbu, monto);
+
 	}
 
 	/**
@@ -52,14 +53,16 @@ public class Banco {
 	 *            Numero de cuenta.
 	 * @param monto
 	 *            : Cantidad de dinero a retirar en moneda de la cuenta.
+	 * @throws CBUInexistenteException
+	 * @throws CuentaInhabilitadaException
+	 * @throws SaldoInsuficienteException
 	 */
 
-	public static void extraccionEnEfectivoEnCajaDeAhorro(int cbu, Double monto) {
-		try {
-			OperacionPorVentanilla.extraccionEnEfectivoEnCajaDeAhorro(cbu, monto);
-		} catch (SaldoInsuficienteException | CuentaInhabilitadaException | CBUInexistenteException e) {
-			System.err.println(e);
-		}
+	public static void extraccionEnEfectivoEnCajaDeAhorro(int cbu, Double monto)
+			throws SaldoInsuficienteException, CuentaInhabilitadaException, CBUInexistenteException {
+
+		OperacionPorVentanilla.extraccionEnEfectivoEnCajaDeAhorro(cbu, monto);
+
 	}
 
 	/**
@@ -75,14 +78,16 @@ public class Banco {
 	 * @param monto
 	 *            : Cantidad de dinero a transferir en moneda de la cuenta de
 	 *            origen.
+	 * @throws SaldoInsuficienteException
+	 * @throws CuentaInhabilitadaException
+	 * @throws CBUInexistenteException
 	 */
 
-	public static void transferencia(int cbuDelOrigen, int cbuDelDestino, Double monto) {
-		try {
-			OperacionPorVentanilla.transferencia(cbuDelOrigen, cbuDelDestino, monto);
-		} catch (CBUInexistenteException | CuentaInhabilitadaException | SaldoInsuficienteException e) {
-			System.err.println(e);
-		}
+	public static void transferencia(int cbuDelOrigen, int cbuDelDestino, Double monto)
+			throws CBUInexistenteException, CuentaInhabilitadaException, SaldoInsuficienteException {
+
+		OperacionPorVentanilla.transferencia(cbuDelOrigen, cbuDelDestino, monto);
+
 	}
 
 	/**
@@ -92,15 +97,13 @@ public class Banco {
 	 *            : CBU de la cuenta que se desea obtener los movimientos.
 	 * @return Arreglo de todas las transacciones de la cuenta. Devuelve un
 	 *         arreglo vacio en caso de recibir un cbu invalido.
+	 * @throws CBUInexistenteException
 	 */
 
-	public static Transaccion[] listarTodosLosMovimientosDeCuenta(int cbu) {
-		try {
-			return OperacionPorVentanilla.listarTodosLosMovimientosDeCuenta(cbu);
-		} catch (CBUInexistenteException e) {
-			System.err.println(e);
-			return null;
-		}
+	public static Transaccion[] listarTodosLosMovimientosDeCuenta(int cbu) throws CBUInexistenteException {
+
+		return OperacionPorVentanilla.listarTodosLosMovimientosDeCuenta(cbu);
+
 	}
 
 	/**
@@ -114,15 +117,15 @@ public class Banco {
 	 *         la cuenta. En caso de tener menos transacciones que
 	 *         CANTIDADDEMOVIMIENTOS devuelve todas sus transacciones. Devuelve
 	 *         un arreglo vacio en caso de recibir un cbu invalido.
+	 * @throws NumeroDeMovimientosInvalidosException
+	 * @throws CBUInexistenteException
 	 */
 
-	public static Transaccion[] listarLosUltimosMovimientosDeCuenta(int cbu, int cantidadDeMovimientos) {
-		try {
-			return OperacionPorVentanilla.listarLosUltimosMovimientosDeCuenta(cbu, cantidadDeMovimientos);
-		} catch (CBUInexistenteException | NumeroDeMovimientosInvalidosException e) {
-			System.err.println(e);
-		}
-		return null;
+	public static Transaccion[] listarLosUltimosMovimientosDeCuenta(int cbu, int cantidadDeMovimientos)
+			throws CBUInexistenteException, NumeroDeMovimientosInvalidosException {
+
+		return OperacionPorVentanilla.listarLosUltimosMovimientosDeCuenta(cbu, cantidadDeMovimientos);
+
 	}
 
 	/*
@@ -143,16 +146,17 @@ public class Banco {
 	 *            : Tipo de moneda de la cuenta creada, puede ser PESO o DOLAR.
 	 * @return : Numero de CBU de la cuenta creada. Devuelve 0 en caso de no
 	 *         poder crear la cuenta.
+	 * @throws ClienteInexistenteException
+	 * @throws SinClientesException
+	 * @throws DepositoInicialInvalidoException
 	 */
 
-	public static int crearCajaDeAhorro(String[] cuits, Double saldo, Double tasaDeInteres, TipoDeMoneda tipoDeMoneda) {
+	public static int crearCajaDeAhorro(String[] cuits, Double saldo, Double tasaDeInteres, TipoDeMoneda tipoDeMoneda)
+			throws DepositoInicialInvalidoException, SinClientesException, ClienteInexistenteException {
+
 		CajaDeAhorro cuenta;
-		try {
-			cuenta = GestionDeCuentas.crearCajaDeAhorro(cuits, saldo, tasaDeInteres, tipoDeMoneda);
-		} catch (DepositoInicialInvalidoException | SinClientesException | ClienteInexistenteException e) {
-			System.err.println(e);
-			return 0;
-		}
+
+		cuenta = GestionDeCuentas.crearCajaDeAhorro(cuits, saldo, tasaDeInteres, tipoDeMoneda);
 
 		Banco.cuentas.add(cuenta);
 		Banco.cajasDeAhorro.add(cuenta);
@@ -171,16 +175,17 @@ public class Banco {
 	 *            : Valor de descubierto que puede tener la cuenta.
 	 * @return : Numero de CBU de la cuenta creada. Devuelve 0 en caso de no
 	 *         poder crear la cuenta.
+	 * @throws SinClientesException
+	 * @throws ClienteInexistenteException
+	 * @throws DepositoInicialInvalidoException
 	 */
 
-	public static int crearCuentaCorriente(String[] cuits, Double saldo, Double sobregiro) {
+	public static int crearCuentaCorriente(String[] cuits, Double saldo, Double sobregiro)
+			throws DepositoInicialInvalidoException, ClienteInexistenteException, SinClientesException {
 		CuentaCorriente cuenta;
-		try {
-			cuenta = GestionDeCuentas.crearCuentaCorriente(cuits, saldo, sobregiro);
-		} catch (DepositoInicialInvalidoException | ClienteInexistenteException | SinClientesException e) {
-			System.err.println(e);
-			return 0;
-		}
+
+		cuenta = GestionDeCuentas.crearCuentaCorriente(cuits, saldo, sobregiro);
+
 		Banco.cuentas.add(cuenta);
 		return cuenta.getCBU();
 	}
@@ -190,14 +195,13 @@ public class Banco {
 	 * 
 	 * @param cbu
 	 *            : CBU de la cuenta que se desea inhabilitar.
+	 * @throws CBUInexistenteException
 	 */
 
-	public static void inhabilitarCuenta(int cbu) {
-		try {
-			GestionDeCuentas.inhabilitarCuenta(cbu);
-		} catch (CBUInexistenteException e) {
-			System.err.println(e);
-		}
+	public static void inhabilitarCuenta(int cbu) throws CBUInexistenteException {
+
+		GestionDeCuentas.inhabilitarCuenta(cbu);
+
 	}
 
 	/**
@@ -206,14 +210,13 @@ public class Banco {
 	 * 
 	 * @param cbu
 	 *            : CBU de la cuenta que se desea habilitar.
+	 * @throws CBUInexistenteException
 	 */
 
-	public static void habilitarCuenta(int cbu) {
-		try {
-			GestionDeCuentas.habilitarCuenta(cbu);
-		} catch (CBUInexistenteException e) {
-			System.err.println(e);
-		}
+	public static void habilitarCuenta(int cbu) throws CBUInexistenteException {
+
+		GestionDeCuentas.habilitarCuenta(cbu);
+
 	}
 
 	/**
@@ -225,7 +228,7 @@ public class Banco {
 	 * @throws CBUInexistenteException
 	 */
 
-	static CuentaDeCliente buscarCuenta(int cbu) throws CBUInexistenteException {
+	public static CuentaDeCliente buscarCuenta(int cbu) throws CBUInexistenteException {
 		CuentaDeCliente cuenta = null;
 
 		for (CuentaDeCliente c : Banco.cuentas) {
@@ -282,16 +285,21 @@ public class Banco {
 	 * @param estadoCivil
 	 * @param profesion
 	 * @param nombreYApellidoDelConyuge
+	 * @throws CUITInvalidoException
 	 * @throws CUITYaAsignadoException
 	 */
 
 	public static void agregarPersonaFisica(String CUIT, String nombre, Domicilio domicilio, String telefono,
 			String tipoDeDocumento, String numeroDeDocumento, String estadoCivil, String profesion,
-			String nombreYApellidoDelConyuge) throws CUITYaAsignadoException {
+			String nombreYApellidoDelConyuge) throws CUITInvalidoException, CUITYaAsignadoException {
+
 		if (!Banco.personasFisicas.add(new PersonaFisica(CUIT, nombre, domicilio, telefono, tipoDeDocumento,
 				numeroDeDocumento, estadoCivil, profesion, nombreYApellidoDelConyuge))) {
+
 			throw new CUITYaAsignadoException(CUIT);
+
 		}
+
 	}
 
 	/**
@@ -308,13 +316,18 @@ public class Banco {
 	 * @param fechaDelContratoSocial
 	 *            : fecha de creacion de la organizacion.
 	 * @throws CUITYaAsignadoException
+	 * @throws CUITInvalidoException
 	 */
 
 	public static void agregarPersonaJuridica(String CUIT, String razonSocial, Domicilio domicilio, String telefono,
-			String fechaDelContratoSocial) throws CUITYaAsignadoException {
+			String fechaDelContratoSocial) throws CUITInvalidoException, CUITYaAsignadoException {
+
 		if (!Banco.clientes.add(new PersonaJuridica(CUIT, razonSocial, domicilio, telefono, fechaDelContratoSocial))) {
+
 			throw new CUITYaAsignadoException(CUIT);
+
 		}
+
 	}
 
 	/**
@@ -328,13 +341,10 @@ public class Banco {
 	 * @throws ClienteInexistenteException
 	 */
 
-	public static boolean bajaCliente(String cuit) {
-		try {
-			return GestionDeClientes.bajaDeCliente(cuit);
-		} catch (ClienteInexistenteException e) {
-			System.err.println(e);
-			return false;
-		}
+	public static boolean bajaCliente(String cuit) throws ClienteInexistenteException {
+
+		return GestionDeClientes.bajaDeCliente(cuit);
+
 	}
 
 	/**
@@ -345,12 +355,10 @@ public class Banco {
 	 * @throws ClienteInexistenteException
 	 */
 
-	public static void activarCliente(String cuit) {
-		try {
-			GestionDeClientes.altaCliente(cuit);
-		} catch (ClienteInexistenteException e) {
-			System.err.println(e);
-		}
+	public static void activarCliente(String cuit) throws ClienteInexistenteException {
+
+		GestionDeClientes.altaCliente(cuit);
+
 	}
 
 	/**
@@ -389,7 +397,6 @@ public class Banco {
 
 	public static PersonaFisica buscarPersonaFisica(String cuit) throws ClienteInexistenteException {
 		PersonaFisica cliente = null;
-		System.out.println(Banco.personasFisicas);
 
 		for (PersonaFisica p : Banco.personasFisicas) {
 			if (p.getCUIT() == cuit)
@@ -406,12 +413,10 @@ public class Banco {
 	 * Gestion Del Banco
 	 */
 
-	public static void cobroDeMantenimientos() {
-		try {
-			ProcesoBatch.cobroDeMantenimientos(cajasDeAhorro);
-		} catch (IOException e) {
-			System.err.println(e);
-		}
+	public static void cobroDeMantenimientos() throws IOException {
+
+		ProcesoBatch.cobroDeMantenimientos(cajasDeAhorro);
+
 	}
 
 	static void acreditarMantenimiento() {

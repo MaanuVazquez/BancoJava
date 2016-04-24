@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import entidad.bancaria.cuentas.CuentaDeCliente;
+import entidad.bancaria.excepciones.CUITInvalidoException;
 
 public abstract class Cliente {
 
@@ -14,12 +15,25 @@ public abstract class Cliente {
 	private HashSet<CuentaDeCliente> cuentas;
 	private boolean activo;
 
-	protected Cliente(String CUIT, String nombreORazonSocial, Domicilio domicilio, String telefono) {
-		this.CUIT = CUIT;
+	protected Cliente(String CUIT, String nombreORazonSocial, Domicilio domicilio, String telefono)
+			throws CUITInvalidoException {
+		chequearCUIT(CUIT);
 		this.nombreORazonSocial = nombreORazonSocial;
 		this.setDomicilio(domicilio);
 		this.setTelefono(telefono);
 		this.activo = true;
+	}
+
+	public void chequearCUIT(String CUIT) throws CUITInvalidoException {
+
+		CUIT = CUIT.replaceAll("[^\\d]", "");
+
+		if (CUIT.length() != 11) {
+			throw new CUITInvalidoException();
+		}
+
+		this.CUIT = CUIT;
+
 	}
 
 	public boolean isActivo() {
