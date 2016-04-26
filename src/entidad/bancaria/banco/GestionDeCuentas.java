@@ -10,6 +10,7 @@ import entidad.bancaria.excepciones.CUITInvalidoException;
 import entidad.bancaria.excepciones.ClienteInexistenteException;
 import entidad.bancaria.excepciones.DepositoInicialInvalidoException;
 import entidad.bancaria.excepciones.SinClientesException;
+import entidad.bancaria.excepciones.TasaDeInteresNegativaException;
 
 public class GestionDeCuentas {
 	
@@ -21,10 +22,11 @@ public class GestionDeCuentas {
 	 * @param tipoDeMoneda : Tipo de moneda de la cuenta creada, puede ser PESO o DOLAR.
 	 * @return : Numero de CBU de la cuenta creada. Devuelve 0 en caso de no poder crear la cuenta.
 	 * @throws CUITInvalidoException 
+	 * @throws TasaDeInteresNegativaException 
 	 */
 	
 	public static CajaDeAhorro crearCajaDeAhorro(String[] cuits, Double saldo, Double tasaDeInteres, TipoDeMoneda tipoDeMoneda)
-			throws DepositoInicialInvalidoException, SinClientesException, ClienteInexistenteException, CUITInvalidoException {
+			throws DepositoInicialInvalidoException, SinClientesException, ClienteInexistenteException, CUITInvalidoException, TasaDeInteresNegativaException {
 		if (cuits.length == 0) {
 			throw new SinClientesException();
 		}

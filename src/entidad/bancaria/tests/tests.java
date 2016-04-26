@@ -25,7 +25,7 @@ public class tests {
 	 */
 	@Before
 	public void fixture() throws CUITInvalidoException, CUITYaAsignadoException, DepositoInicialInvalidoException,
-			SinClientesException, ClienteInexistenteException {
+			SinClientesException, ClienteInexistenteException, TasaDeInteresNegativaException {
 
 		/* Creamos un Domicilio */
 		domicilio = new Domicilio("42 Wallaby", "2222", "P Sherman", "Sidney");

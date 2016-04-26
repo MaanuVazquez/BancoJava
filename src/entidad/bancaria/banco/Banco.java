@@ -1,7 +1,7 @@
 package entidad.bancaria.banco;
 
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.HashMap;
 
 import entidad.bancaria.clientes.*;
 import entidad.bancaria.cuentas.*;
@@ -9,12 +9,13 @@ import entidad.bancaria.excepciones.*;
 
 public class Banco {
 
-	private static HashSet<CuentaDeCliente> cuentas = new HashSet<CuentaDeCliente>();
-	private static HashSet<CajaDeAhorro> cajasDeAhorro = new HashSet<CajaDeAhorro>();
-	private static HashSet<Cliente> clientes = new HashSet<Cliente>();
-	private static HashSet<PersonaFisica> personasFisicas = new HashSet<PersonaFisica>();
-	private static Cuenta retenciones = new Cuenta();
-	private static Cuenta mantenimiento = new Cuenta();
+	private static HashMap<Integer, CuentaDeCliente> cuentas = new HashMap<Integer, CuentaDeCliente>();
+	private static HashMap<Integer, CajaDeAhorro> cajasDeAhorro = new HashMap<Integer, CajaDeAhorro>();
+	private static HashMap<String, Cliente> clientes = new HashMap<String, Cliente>();
+	private static HashMap<String, PersonaFisica> personasFisicas = new HashMap<String, PersonaFisica>();
+	private static CuentaEspecial retenciones = new CuentaEspecial();
+	private static CuentaEspecial mantenimiento = new CuentaEspecial();
+	private static Double interesesPagados = 0.0;
 	private static double cotizacionDolar = 14.8;
 
 	/**
@@ -141,7 +142,7 @@ public class Banco {
 	 * @param saldo
 	 *            : Deposito inicial para crear la cuenta.
 	 * @param tasaDeInteres
-	 *            : ¿?
+	 *            : Interes obtenido mensualmente
 	 * @param tipoDeMoneda
 	 *            : Tipo de moneda de la cuenta creada, puede ser PESO o DOLAR.
 	 * @return : Numero de CBU de la cuenta creada. Devuelve 0 en caso de no
@@ -150,17 +151,18 @@ public class Banco {
 	 * @throws SinClientesException
 	 * @throws DepositoInicialInvalidoException
 	 * @throws CUITInvalidoException 
+	 * @throws TasaDeInteresNegativaException 
 	 */
 
 	public static int crearCajaDeAhorro(String[] cuits, Double saldo, Double tasaDeInteres, TipoDeMoneda tipoDeMoneda)
-			throws DepositoInicialInvalidoException, SinClientesException, ClienteInexistenteException, CUITInvalidoException {
+			throws DepositoInicialInvalidoException, SinClientesException, ClienteInexistenteException, CUITInvalidoException, TasaDeInteresNegativaException {
 
 		CajaDeAhorro cuenta;
 
 		cuenta = GestionDeCuentas.crearCajaDeAhorro(cuits, saldo, tasaDeInteres, tipoDeMoneda);
-
-		Banco.cuentas.add(cuenta);
-		Banco.cajasDeAhorro.add(cuenta);
+		
+		Banco.cuentas.put(cuenta.getCBU(), cuenta);
+		Banco.cajasDeAhorro.put(cuenta.getCBU(), cuenta);
 		return cuenta.getCBU();
 	}
 
@@ -188,7 +190,7 @@ public class Banco {
 
 		cuenta = GestionDeCuentas.crearCuentaCorriente(cuits, saldo, sobregiro);
 
-		Banco.cuentas.add(cuenta);
+		Banco.cuentas.put(cuenta.getCBU(), cuenta);
 		return cuenta.getCBU();
 	}
 
@@ -233,14 +235,12 @@ public class Banco {
 	public static CuentaDeCliente buscarCuenta(int cbu) throws CBUInexistenteException {
 		CuentaDeCliente cuenta = null;
 
-		for (CuentaDeCliente c : Banco.cuentas) {
-			if (c.getCBU() == cbu)
-				cuenta = c;
-		}
+		cuenta = cuentas.get(cbu);
 
 		if (cuenta == null) {
 			throw new CBUInexistenteException(cbu);
 		}
+		
 		return cuenta;
 	}
 
@@ -256,14 +256,12 @@ public class Banco {
 	public static CajaDeAhorro buscarCajaDeAhorro(int cbu) throws CBUInexistenteException {
 		CajaDeAhorro cuenta = null;
 
-		for (CajaDeAhorro c : Banco.cajasDeAhorro) {
-			if (c.getCBU() == cbu)
-				cuenta = c;
-		}
+		cuenta = cajasDeAhorro.get(cbu);
 
 		if (cuenta == null) {
 			throw new CBUInexistenteException(cbu);
 		}
+		
 		return cuenta;
 	}
 
@@ -274,7 +272,7 @@ public class Banco {
 	/**
 	 * Agrega a una persona fisica como cliente de el banco.
 	 * 
-	 * @param CUIT
+	 * @param cuit
 	 *            : Clave Única de Identificación Tributaria.
 	 * @param nombre
 	 *            : Nombres y Apellidos del cliente
@@ -291,23 +289,26 @@ public class Banco {
 	 * @throws CUITYaAsignadoException
 	 */
 
-	public static void agregarPersonaFisica(String CUIT, String nombre, Domicilio domicilio, String telefono,
+	public static void agregarPersonaFisica(String cuit, String nombre, Domicilio domicilio, String telefono,
 			String tipoDeDocumento, String numeroDeDocumento, String estadoCivil, String profesion,
 			String nombreYApellidoDelConyuge) throws CUITInvalidoException, CUITYaAsignadoException {
 
-		if (!Banco.personasFisicas.add(new PersonaFisica(CUIT, nombre, domicilio, telefono, tipoDeDocumento,
-				numeroDeDocumento, estadoCivil, profesion, nombreYApellidoDelConyuge))) {
-
-			throw new CUITYaAsignadoException(CUIT);
-
+		
+		cuit = Cliente.chequearCUIT(cuit);
+		
+		if(clientes.get(cuit) != null){
+			throw new CUITYaAsignadoException(cuit);
 		}
+		
+		Banco.personasFisicas.put(cuit, new PersonaFisica(cuit, nombre, domicilio, telefono, tipoDeDocumento,
+				numeroDeDocumento, estadoCivil, profesion, nombreYApellidoDelConyuge));
 
 	}
 
 	/**
 	 * Agrega a una persona juridica como cliente de el banco.
 	 * 
-	 * @param CUIT
+	 * @param cuit
 	 *            : Clave Única de Identificación Tributaria.
 	 * @param razonSocial
 	 *            : Nombre completo de la organizacion.
@@ -321,15 +322,16 @@ public class Banco {
 	 * @throws CUITInvalidoException
 	 */
 
-	public static void agregarPersonaJuridica(String CUIT, String razonSocial, Domicilio domicilio, String telefono,
+	public static void agregarPersonaJuridica(String cuit, String razonSocial, Domicilio domicilio, String telefono,
 			String fechaDelContratoSocial) throws CUITInvalidoException, CUITYaAsignadoException {
 			
-		if (!Banco.clientes.add(new PersonaJuridica(CUIT, razonSocial, domicilio, telefono, fechaDelContratoSocial))) {
-
-			throw new CUITYaAsignadoException(CUIT);
-
+		cuit = Cliente.chequearCUIT(cuit);
+		
+		if(clientes.get(cuit) != null){
+			throw new CUITYaAsignadoException(cuit);
 		}
-
+		
+		Banco.clientes.put(cuit, new PersonaJuridica(cuit, razonSocial, domicilio, telefono, fechaDelContratoSocial)); 
 	}
 
 	/**
@@ -381,10 +383,7 @@ public class Banco {
 		
 		cuit = Cliente.chequearCUIT(cuit);
 		
-		for (Cliente c : Banco.clientes) {
-			if (c.getCUIT() == cuit)
-				cliente = c;
-		}
+		cliente = clientes.get(cuit);
 
 		if (cliente == null) {
 			throw new ClienteInexistenteException(cuit);
@@ -408,10 +407,7 @@ public class Banco {
 		
 		cuit = Cliente.chequearCUIT(cuit);
 
-		for (PersonaFisica p : Banco.personasFisicas) {
-			if (p.getCUIT() == cuit)
-				cliente = p;
-		}
+		cliente = personasFisicas.get(cuit);
 
 		if (cliente == null) {
 			throw new ClienteInexistenteException(cuit);
@@ -433,6 +429,10 @@ public class Banco {
 		mantenimiento.acreditar(ProcesoBatch.getCOSTO_DE_MANTENIMIENTO(), MotivoDeTransaccion.COBRO_DE_MANTENIMIENTO);
 	}
 
+	static void debitarIntereses(double monto) {
+		interesesPagados += monto;
+	}
+	
 	public static void cobrarRetenciones(double monto) {
 		Banco.retenciones.acreditar(monto, MotivoDeTransaccion.COBRO_DE_MANTENIMIENTO);
 	}

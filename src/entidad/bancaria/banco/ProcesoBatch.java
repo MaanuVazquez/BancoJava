@@ -6,7 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import entidad.bancaria.cuentas.CajaDeAhorro;
 import entidad.bancaria.cuentas.MotivoDeTransaccion;
@@ -18,7 +19,7 @@ public class ProcesoBatch {
 
 	private static Double costoDeMantenimiento = 0.0;
 
-	public static void cobroDeMantenimientos(HashSet<CajaDeAhorro> cuentas) throws IOException {
+	public static void cobroDeMantenimientos(HashMap<Integer, CajaDeAhorro> cuentas) throws IOException {
 		String fecha = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 		File cobrados = new File("MantenimientosCobrados " + fecha + ".txt");
 		File errores = new File("ErroresMantenimiento " + fecha + ".txt");
@@ -27,9 +28,9 @@ public class ProcesoBatch {
 		BufferedWriter cobradosBW = new BufferedWriter(new FileWriter(cobrados));
 		BufferedWriter erroresBW = new BufferedWriter(new FileWriter(errores));
 
-		for (CajaDeAhorro cuenta : cuentas) {
+		for (Entry<Integer, CajaDeAhorro> entry : cuentas.entrySet()) {
 
-			debitarMantenimiento(cuenta, cobradosBW, erroresBW);
+			debitarMantenimiento(entry.getValue(), cobradosBW, erroresBW);
 
 		}
 
@@ -63,6 +64,19 @@ public class ProcesoBatch {
 
 			erroresBW.write("CBU: " + cuenta.getCBU() + ", Tipo De Cuenta: Caja De Ahorro, " + monto
 					+ ", Motivo : CuentaInhabilitada.\n");
+		}
+	}
+	
+	public static void pagarInteres(HashMap<Integer, CajaDeAhorro> cuentas){
+		for (Entry<Integer, CajaDeAhorro> entry : cuentas.entrySet()) {
+			try {
+				CajaDeAhorro cuenta = entry.getValue();
+				double monto = cuenta.getTasaDeInteres() * cuenta.getSaldo();
+				cuenta.acreditar(monto, MotivoDeTransaccion.PAGO_DE_INTERES);
+				Banco.debitarIntereses(monto);
+			} catch (CuentaInhabilitadaException e) {
+				
+			}
 		}
 	}
 

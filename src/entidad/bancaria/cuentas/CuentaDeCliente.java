@@ -1,23 +1,42 @@
 package entidad.bancaria.cuentas;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import entidad.bancaria.clientes.Cliente;
 import entidad.bancaria.excepciones.CuentaInhabilitadaException;
 import entidad.bancaria.excepciones.SaldoInsuficienteException;
 
-public class CuentaDeCliente extends Cuenta {
+public class CuentaDeCliente {
 
+	protected ArrayList<Transaccion> transacciones;
+	protected Double saldo;
+	protected TipoDeMoneda tipoDeMoneda;
 	private static Integer CBU_MAX = 1;
 	private Integer cbu;
 	private boolean habilitada;
 	private Cliente[] clientes;
 
 	public CuentaDeCliente(Cliente[] clientes) {
+		saldo = 0.0;
+		tipoDeMoneda = TipoDeMoneda.PESO;
+		this.transacciones = new ArrayList<Transaccion>();
 		cbu = CBU_MAX;
 		CBU_MAX++;
 		this.clientes = clientes;
 		this.habilitada = true;
+	}
+	
+	public ArrayList<Transaccion> getTransacciones() {
+		return transacciones;
+	}
+
+	public Double getSaldo() {
+		return saldo;
+	}
+
+	public TipoDeMoneda getTipoDeMoneda() {
+		return this.tipoDeMoneda;
 	}
 
 	public Integer getCBU() {
@@ -52,8 +71,31 @@ public class CuentaDeCliente extends Cuenta {
 		this.transacciones.add(new Transaccion(TipoDeMovimiento.DEBITO, monto, motivo));
 		this.saldo -= monto;
 	}
-
-	public void acreditar(Double monto, MotivoDeTransaccion motivo, String observaciones) {
+	
+	public void debitar(Double monto, MotivoDeTransaccion motivo, String observaciones)
+			throws SaldoInsuficienteException, CuentaInhabilitadaException {
+		if (!this.isHabilitada()) {
+			throw new CuentaInhabilitadaException(this.cbu);
+		}
+		if (monto > this.saldo) {
+			throw new SaldoInsuficienteException(this.cbu, monto, this.saldo);
+		}
+		this.transacciones.add(new Transaccion(TipoDeMovimiento.DEBITO, monto, motivo, observaciones));
+		this.saldo -= monto;
+	}
+	
+	public void acreditar(Double monto, MotivoDeTransaccion motivo) throws CuentaInhabilitadaException {
+		if (!this.isHabilitada()) {
+			throw new CuentaInhabilitadaException(this.cbu);
+		}
+		this.saldo += monto;
+		this.transacciones.add(new Transaccion(TipoDeMovimiento.CREDITO, monto, motivo));
+	}
+	
+	public void acreditar(Double monto, MotivoDeTransaccion motivo, String observaciones) throws CuentaInhabilitadaException {
+		if (!this.isHabilitada()) {
+			throw new CuentaInhabilitadaException(this.cbu);
+		}
 		this.saldo += monto;
 		this.transacciones.add(new Transaccion(TipoDeMovimiento.CREDITO, monto, motivo, observaciones));
 	}

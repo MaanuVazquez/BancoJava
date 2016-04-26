@@ -2,13 +2,13 @@ package entidad.bancaria.cuentas;
 
 import java.util.ArrayList;
 
-public class Cuenta {
+public class CuentaEspecial {
 
 	protected ArrayList<Transaccion> transacciones;
 	protected Double saldo;
 	protected TipoDeMoneda tipoDeMoneda;
 
-	public Cuenta() {
+	public CuentaEspecial() {
 		saldo = 0.0;
 		tipoDeMoneda = TipoDeMoneda.PESO;
 		this.transacciones = new ArrayList<Transaccion>();
@@ -30,7 +30,12 @@ public class Cuenta {
 		this.saldo += monto;
 		this.transacciones.add(new Transaccion(TipoDeMovimiento.CREDITO, monto, motivo));
 	}
-
+	
+	public void debitar(Double monto, MotivoDeTransaccion motivo) {
+		this.saldo -= monto;
+		this.transacciones.add(new Transaccion(TipoDeMovimiento.DEBITO, monto, motivo));
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -48,7 +53,7 @@ public class Cuenta {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Cuenta other = (Cuenta) obj;
+		CuentaEspecial other = (CuentaEspecial) obj;
 		if (saldo == null) {
 			if (other.saldo != null)
 				return false;
