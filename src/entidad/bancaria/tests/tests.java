@@ -114,8 +114,6 @@ public class tests {
 
 	}
 
-
-
 	/*
 	 * Prueba error buscar un cliente inexistente en la lista
 	 */
@@ -150,7 +148,8 @@ public class tests {
 	 */
 
 	@Test
-	public void testDepositoCuentaInhabilitada() throws CBUInexistenteException, CuentaInhabilitadaException {
+	public void testDepositoCuentaInhabilitada()
+			throws CBUInexistenteException, CuentaInhabilitadaException {
 
 		excepcionEsperada.expect(CuentaInhabilitadaException.class);
 		Banco.inhabilitarCuenta(1);
@@ -166,9 +165,29 @@ public class tests {
 		excepcionEsperada.expect(CBUInexistenteException.class);
 		Banco.inhabilitarCuenta(54654);
 	}
-	
-	
-	
-	
-	
+
+	/*
+	 * Prueba error numero de movimiento invalido
+	 */
+
+	public void testNumeroDeMovimientoInvalido()
+			throws CBUInexistenteException,
+			NumeroDeMovimientosInvalidosException {
+
+		excepcionEsperada.expect(NumeroDeMovimientosInvalidosException.class);
+		Banco.listarTodosLosMovimientosDeCuenta(1);
+		Banco.listarLosUltimosMovimientosDeCuenta(1, 10);
+	}
+
+	/*
+	 * Prueba error debitar saldo insuficiente
+	 */
+
+	public void testSaldoInsuficiente() throws SaldoInsuficienteException,
+			CuentaInhabilitadaException, CBUInexistenteException {
+
+		excepcionEsperada.expect(SaldoInsuficienteException.class);
+		Banco.extraccionEnEfectivoEnCajaDeAhorro(1, 1000000.0);
+	}
+
 }
