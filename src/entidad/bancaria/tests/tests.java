@@ -55,6 +55,9 @@ public class tests {
 		Banco.crearCuentaCorriente(clientesCuentaCorriente, 10000.0, 10000.0);
 	}
 
+	/*
+	 * Prueba error crar una cuenta sin clientes.
+	 */
 	@Test
 	public void testCrearCuentaSinClientes()
 			throws DepositoInicialInvalidoException,
@@ -67,6 +70,10 @@ public class tests {
 
 	}
 
+	/*
+	 * Prueba error crear una cuenta corriente con saldo menor al estipulado
+	 */
+
 	@Test
 	public void testCuentaCorrienteSaldoMenorA10000()
 			throws DepositoInicialInvalidoException,
@@ -78,6 +85,10 @@ public class tests {
 		Banco.crearCuentaCorriente(clientesCuentaCorriente, 5000.0, 10000.0);
 	}
 
+	/*
+	 * Prueba error con cuit invalido
+	 */
+
 	@Test
 	public void testCUITInvalido() throws CUITInvalidoException,
 			CUITYaAsignadoException {
@@ -87,6 +98,10 @@ public class tests {
 				"0303456", "DNI", "00000000", "Soltero", "Psicólogo",
 				"Doña Florinda");
 	}
+
+	/*
+	 * Prueba error crea un cuit ya existente
+	 */
 
 	@Test
 	public void testCUITYaAsignado() throws CUITInvalidoException,
@@ -99,6 +114,10 @@ public class tests {
 
 	}
 
+	/*
+	 * Prueba error crear una caja de ahorro con un monto menor a lo estipulado
+	 */
+
 	@Test
 	public void testDepositoInicialInvalido()
 			throws DepositoInicialInvalidoException, SinClientesException,
@@ -110,6 +129,11 @@ public class tests {
 				TipoDeMoneda.PESO);
 
 	}
+	
+	/*
+	 * Prueba error buscar un cliente inexistente en la lista
+	 */
+
 
 	@Test
 	public void testClienteInexistente() throws ClienteInexistenteException,
@@ -119,6 +143,11 @@ public class tests {
 		Banco.buscarCliente("06513210326");
 
 	}
+	
+	/*
+	 * Prueba error setear un valor negativo en una tasa
+	 */
+
 
 	@Test
 	public void testTasaDeInteresNegativa()
@@ -131,10 +160,18 @@ public class tests {
 				TipoDeMoneda.PESO);
 
 	}
-	
+
+	/*
+	 * Prueba error depo
+	 */
+
 	@Test
-	public void test(){
-		
+	public void test() {
+
 	}
+
+	/*
+	 * Prueba error
+	 */
 
 }
