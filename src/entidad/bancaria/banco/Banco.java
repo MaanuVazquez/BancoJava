@@ -293,13 +293,13 @@ public class Banco {
 			String tipoDeDocumento, String numeroDeDocumento, String estadoCivil, String profesion,
 			String nombreYApellidoDelConyuge) throws CUITInvalidoException, CUITYaAsignadoException {
 
-		
 		cuit = Cliente.chequearCUIT(cuit);
 		
 		if(clientes.get(cuit) != null){
 			throw new CUITYaAsignadoException(cuit);
 		}
-		
+		Banco.clientes.put(cuit, new PersonaFisica(cuit, nombre, domicilio, telefono, tipoDeDocumento,
+				numeroDeDocumento, estadoCivil, profesion, nombreYApellidoDelConyuge));
 		Banco.personasFisicas.put(cuit, new PersonaFisica(cuit, nombre, domicilio, telefono, tipoDeDocumento,
 				numeroDeDocumento, estadoCivil, profesion, nombreYApellidoDelConyuge));
 
