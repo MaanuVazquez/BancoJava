@@ -114,21 +114,7 @@ public class tests {
 
 	}
 
-	/*
-	 * Prueba error crear una caja de ahorro con un monto menor a lo estipulado
-	 */
 
-	@Test
-	public void testDepositoInicialInvalido()
-			throws DepositoInicialInvalidoException, SinClientesException,
-			ClienteInexistenteException, CUITInvalidoException,
-			TasaDeInteresNegativaException {
-
-		excepcionEsperada.expect(DepositoInicialInvalidoException.class);
-		Banco.crearCajaDeAhorro(new String[] { "20000000001" }, -10.0, 10.0,
-				TipoDeMoneda.PESO);
-
-	}
 
 	/*
 	 * Prueba error buscar un cliente inexistente en la lista
@@ -180,6 +166,9 @@ public class tests {
 		excepcionEsperada.expect(CBUInexistenteException.class);
 		Banco.inhabilitarCuenta(54654);
 	}
+	
+	
+	
 	
 	
 }
