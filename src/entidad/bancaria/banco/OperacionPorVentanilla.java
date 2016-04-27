@@ -30,8 +30,7 @@ public class OperacionPorVentanilla {
 		if (!cuentaDestino.isHabilitada()) {
 			throw new CuentaInhabilitadaException(cbu);
 		}
-		cuentaDestino.acreditar(monto,
-				MotivoDeTransaccion.DEPOSITO_POR_VENTANILLA);
+		cuentaDestino.acreditar(monto, MotivoDeTransaccion.DEPOSITO_POR_VENTANILLA);
 	}
 
 	/**
@@ -48,12 +47,10 @@ public class OperacionPorVentanilla {
 	 */
 
 	public static void extraccionEnEfectivoEnCajaDeAhorro(int cbu, Double monto)
-			throws SaldoInsuficienteException, CuentaInhabilitadaException,
-			CBUInexistenteException {
+			throws SaldoInsuficienteException, CuentaInhabilitadaException, CBUInexistenteException {
 		CajaDeAhorro cuentaDestino;
 		cuentaDestino = Banco.buscarCajaDeAhorro(cbu);
-		cuentaDestino.debitar(monto,
-				MotivoDeTransaccion.EXTRACCION_POR_VENTANILLA);
+		cuentaDestino.debitar(monto, MotivoDeTransaccion.EXTRACCION_POR_VENTANILLA);
 	}
 
 	/**
@@ -74,9 +71,8 @@ public class OperacionPorVentanilla {
 	 * @throws SaldoInsuficienteException
 	 */
 
-	public static void transferencia(int cbuDelOrigen, int cbuDelDestino,
-			Double monto) throws CBUInexistenteException,
-			CuentaInhabilitadaException, SaldoInsuficienteException {
+	public static void transferencia(int cbuDelOrigen, int cbuDelDestino, Double monto)
+			throws CBUInexistenteException, CuentaInhabilitadaException, SaldoInsuficienteException {
 
 		CuentaDeCliente cuentaOrigen;
 		CuentaDeCliente cuentaDestino;
@@ -93,15 +89,13 @@ public class OperacionPorVentanilla {
 		} else if (cuentaOrigen.getTipoDeMoneda() == TipoDeMoneda.PESO) {
 			monto = monto / Banco.getCotizacion();
 			cuentaDestino.acreditar(monto, MotivoDeTransaccion.TRANSFERENCIA,
-					"Conversión de Peso Argentino(ARS) a Dolar(USD): " + monto
-							+ " Cotización: 1 ARS - " + Banco.getCotizacion()
-							+ " USD");
+					"Conversión de Peso Argentino(ARS) a Dolar(USD): " + monto + " Cotización: 1 ARS - "
+							+ Banco.getCotizacion() + " USD");
 		} else {
 			monto = monto * Banco.getCotizacion();
 			cuentaDestino.acreditar(monto, MotivoDeTransaccion.TRANSFERENCIA,
-					"Conversión de Dolar(USD) a Peso Argentino(ARS): " + monto
-							+ " Cotización: 1 ARS - " + Banco.getCotizacion()
-							+ " USD");
+					"Conversión de Dolar(USD) a Peso Argentino(ARS): " + monto + " Cotización: 1 ARS - "
+							+ Banco.getCotizacion() + " USD");
 		}
 	}
 
@@ -115,11 +109,11 @@ public class OperacionPorVentanilla {
 	 * @throws CBUInexistenteException
 	 */
 
-	public static Transaccion[] listarTodosLosMovimientosDeCuenta(int cbu)
-			throws CBUInexistenteException {
+	public static Transaccion[] listarTodosLosMovimientosDeCuenta(int cbu) throws CBUInexistenteException {
 		CuentaDeCliente cuenta;
 		cuenta = Banco.buscarCuenta(cbu);
-		return (Transaccion[]) cuenta.getTransacciones().toArray();
+		Transaccion[] movimientos = new Transaccion[cuenta.getTransacciones().size()];
+		return cuenta.getTransacciones().toArray(movimientos);
 	}
 
 	/**
@@ -137,15 +131,13 @@ public class OperacionPorVentanilla {
 	 * @throws NumeroDeMovimientosInvalidosException
 	 */
 
-	public static Transaccion[] listarLosUltimosMovimientosDeCuenta(int cbu,
-			int cantidadDeMovimientos) throws CBUInexistenteException,
-			NumeroDeMovimientosInvalidosException {
+	public static Transaccion[] listarLosUltimosMovimientosDeCuenta(int cbu, int cantidadDeMovimientos)
+			throws CBUInexistenteException, NumeroDeMovimientosInvalidosException {
 
 		CuentaDeCliente cuenta;
 		cuenta = Banco.buscarCuenta(cbu);
 		if (cantidadDeMovimientos < 1) {
-			throw new NumeroDeMovimientosInvalidosException(
-					cantidadDeMovimientos);
+			throw new NumeroDeMovimientosInvalidosException(cantidadDeMovimientos);
 		}
 		if (cantidadDeMovimientos > cuenta.getTransacciones().size()) {
 			cantidadDeMovimientos = cuenta.getTransacciones().size();
@@ -153,8 +145,8 @@ public class OperacionPorVentanilla {
 
 		Transaccion[] ultimosMovimientos = new Transaccion[cantidadDeMovimientos];
 
-		for (int i = (cuenta.getTransacciones().size()) - cantidadDeMovimientos; i < cuenta
-				.getTransacciones().size(); i++) {
+		for (int i = (cuenta.getTransacciones().size()) - cantidadDeMovimientos; i < cuenta.getTransacciones()
+				.size(); i++) {
 			ultimosMovimientos[i] = cuenta.getTransacciones().get(i);
 		}
 
