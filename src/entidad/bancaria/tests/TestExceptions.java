@@ -10,7 +10,7 @@ import entidad.bancaria.clientes.*;
 import entidad.bancaria.cuentas.*;
 import entidad.bancaria.excepciones.*;
 
-public class tests {
+public class TestExceptions {
 
 	private static Domicilio domicilio;
 
@@ -160,6 +160,7 @@ public class tests {
 	 * Prueba error CBU inexistente
 	 */
 
+	@Test
 	public void testCBUInexistente() throws CBUInexistenteException {
 
 		excepcionEsperada.expect(CBUInexistenteException.class);
@@ -170,6 +171,7 @@ public class tests {
 	 * Prueba error numero de movimiento invalido
 	 */
 
+	@Test
 	public void testNumeroDeMovimientoInvalido()
 			throws CBUInexistenteException,
 			NumeroDeMovimientosInvalidosException {
@@ -183,6 +185,7 @@ public class tests {
 	 * Prueba error debitar saldo insuficiente
 	 */
 
+	@Test
 	public void testSaldoInsuficiente() throws SaldoInsuficienteException,
 			CuentaInhabilitadaException, CBUInexistenteException {
 
@@ -190,7 +193,4 @@ public class tests {
 		Banco.extraccionEnEfectivoEnCajaDeAhorro(1, 1000000.0);
 	}
 
-	/*
-	 * Prueba error debitar saldo insuficiente
-	 */
 }
