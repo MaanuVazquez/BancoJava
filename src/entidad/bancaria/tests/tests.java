@@ -129,11 +129,10 @@ public class tests {
 				TipoDeMoneda.PESO);
 
 	}
-	
+
 	/*
 	 * Prueba error buscar un cliente inexistente en la lista
 	 */
-
 
 	@Test
 	public void testClienteInexistente() throws ClienteInexistenteException,
@@ -143,11 +142,10 @@ public class tests {
 		Banco.buscarCliente("06513210326");
 
 	}
-	
+
 	/*
 	 * Prueba error setear un valor negativo en una tasa
 	 */
-
 
 	@Test
 	public void testTasaDeInteresNegativa()
@@ -162,16 +160,26 @@ public class tests {
 	}
 
 	/*
-	 * Prueba error depo
+	 * Prueba error depositar en cuenta inhabilidata
 	 */
 
 	@Test
-	public void test() {
+	public void testDepositoCuentaInhabilitada() throws CBUInexistenteException, CuentaInhabilitadaException {
 
+		excepcionEsperada.expect(CuentaInhabilitadaException.class);
+		Banco.inhabilitarCuenta(1);
+		Banco.depositoEnEfectivo(1, 100.0);
 	}
 
 	/*
-	 * Prueba error
+	 * Prueba error CBU inexistente
 	 */
 
+	public void testCBUInexistente() throws CBUInexistenteException {
+
+		excepcionEsperada.expect(CBUInexistenteException.class);
+		Banco.inhabilitarCuenta(54654);
+	}
+	
+	
 }
