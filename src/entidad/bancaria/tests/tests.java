@@ -190,4 +190,7 @@ public class tests {
 		Banco.extraccionEnEfectivoEnCajaDeAhorro(1, 1000000.0);
 	}
 
+	/*
+	 * Prueba error debitar saldo insuficiente
+	 */
 }
