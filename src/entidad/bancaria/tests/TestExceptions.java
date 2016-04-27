@@ -177,8 +177,8 @@ public class TestExceptions {
 			NumeroDeMovimientosInvalidosException {
 
 		excepcionEsperada.expect(NumeroDeMovimientosInvalidosException.class);
-		Banco.listarTodosLosMovimientosDeCuenta(1);
-		Banco.listarLosUltimosMovimientosDeCuenta(1, 10);
+		Banco.listarTodosLosMovimientosDeCuenta(2);
+		Banco.listarLosUltimosMovimientosDeCuenta(2, 10);
 	}
 
 	/*
@@ -190,7 +190,7 @@ public class TestExceptions {
 			CuentaInhabilitadaException, CBUInexistenteException {
 
 		excepcionEsperada.expect(SaldoInsuficienteException.class);
-		Banco.extraccionEnEfectivoEnCajaDeAhorro(1, 1000000.0);
+		Banco.extraccionEnEfectivoEnCajaDeAhorro(2, 1000000.0);
 	}
 
 }
