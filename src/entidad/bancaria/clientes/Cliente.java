@@ -15,14 +15,35 @@ public abstract class Cliente {
 	private HashSet<Cuenta> cuentas;
 	private boolean activo;
 
-	protected Cliente(String CUIT, String nombreORazonSocial, Domicilio domicilio, String telefono)
-			throws CUITInvalidoException {
+	/**
+	 * Crea el registro de un nuevo cliente
+	 * 
+	 * @param CUIT
+	 *            : Clave Única de Identificación Tributaria.
+	 * @param nombreORazonSocial
+	 * @param domicilio
+	 * @param telefono
+	 * @throws CUITInvalidoException
+	 */
+
+	protected Cliente(String CUIT, String nombreORazonSocial,
+			Domicilio domicilio, String telefono) throws CUITInvalidoException {
 		this.CUIT = chequearCUIT(CUIT);
 		this.nombreORazonSocial = nombreORazonSocial;
 		this.setDomicilio(domicilio);
 		this.setTelefono(telefono);
 		this.activo = true;
 	}
+
+	/**
+	 * Modifica el ingreso del CUIT. Remueve los caracteres que no sean digitos
+	 * y en caso de que no tenga 11 numeros lanza una excepcion.
+	 * 
+	 * @param CUIT
+	 *            : Clave Única de Identificación Tributaria.
+	 * @return CUIT validado.
+	 * @throws CUITInvalidoException
+	 */
 
 	public static String chequearCUIT(String CUIT) throws CUITInvalidoException {
 
@@ -36,10 +57,19 @@ public abstract class Cliente {
 
 	}
 
+	/**
+	 * @return	true si el cliente esta activo.
+	 */
+	
 	public boolean isActivo() {
 		return activo;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	
 	public boolean darDeBaja() {
 		boolean cuentaHabilitada = false;
 		if (!cuentas.isEmpty()) {
@@ -54,6 +84,18 @@ public abstract class Cliente {
 		return !activo;
 	}
 
+	/**
+	 * Asigna una cuenta al cliente
+	 * @param cuenta cuenta a asignar
+	 */
+	public void asignarCuenta(Cuenta cuenta) {
+		cuentas.add(cuenta);
+	}
+	
+	/**
+	 * Activa un cliente dado de baja anteriormente
+	 */
+	
 	public void activar() {
 		this.activo = true;
 	}
@@ -86,21 +128,6 @@ public abstract class Cliente {
 		return cuentas;
 	}
 
-	public void asignarCuenta(Cuenta cuenta) {
-		cuentas.add(cuenta);
-	}
-
-	public void removerCuenta(Cuenta cuenta) {
-		Iterator<Cuenta> iterador = cuentas.iterator();
-		Cuenta cuentaTemporal = iterador.next();
-		while (iterador.hasNext() && cuentaTemporal != cuenta) {
-			cuenta = iterador.next();
-		}
-		if (cuenta.equals(cuentaTemporal)) {
-			iterador.remove();
-		}
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -112,41 +139,19 @@ public abstract class Cliente {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Cliente other = (Cliente) obj;
-		if (CUIT == null) {
-			if (other.CUIT != null)
-				return false;
-		} else if (!CUIT.equals(other.CUIT))
-			return false;
-		if (cuentas == null) {
-			if (other.cuentas != null)
-				return false;
-		} else if (!cuentas.equals(other.cuentas))
-			return false;
-		if (domicilio == null) {
-			if (other.domicilio != null)
-				return false;
-		} else if (!domicilio.equals(other.domicilio))
-			return false;
-		if (activo != other.activo)
-			return false;
-		if (nombreORazonSocial == null) {
-			if (other.nombreORazonSocial != null)
-				return false;
-		} else if (!nombreORazonSocial.equals(other.nombreORazonSocial))
-			return false;
-		if (telefono == null) {
-			if (other.telefono != null)
-				return false;
-		} else if (!telefono.equals(other.telefono))
+		if (this.CUIT != ((Cliente) obj).CUIT)
 			return false;
 		return true;
 	}
 
+	public int compareTo(Cliente obj) {
+		if (obj == null) {
+			throw new NullPointerException();
+		}
+		return this.CUIT.compareTo(obj.CUIT);
+	}
 }

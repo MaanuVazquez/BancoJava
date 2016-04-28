@@ -10,6 +10,20 @@ public class PersonaFisica extends Cliente{
 	private String profesion;
 	private String nombreYApellidoDelConyuge;
 
+	/**
+	 * Crea el registro de una Persona Fisica
+	 * @param CUIT
+	 * @param nombreORazonSocial
+	 * @param domicilio
+	 * @param telefono
+	 * @param tipoDeDocumento
+	 * @param numeroDeDocumento
+	 * @param estadoCivil
+	 * @param profesion
+	 * @param nombreYApellidoDelConyuge
+	 * @throws CUITInvalidoException
+	 */
+	
 	public PersonaFisica(String CUIT, String nombreORazonSocial, Domicilio domicilio, String telefono,
 			String tipoDeDocumento, String numeroDeDocumento, String estadoCivil, String profesion ,String nombreYApellidoDelConyuge) throws CUITInvalidoException{
 		super(CUIT, nombreORazonSocial, domicilio, telefono);

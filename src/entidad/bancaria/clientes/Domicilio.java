@@ -7,6 +7,14 @@ public class Domicilio {
 	private String localidad;
 	private String provincia;
 	
+	/**
+	 * Domicilio de Cliente
+	 * @param dirección
+	 * @param codigoPostal
+	 * @param localidad
+	 * @param provincia
+	 */
+	
 	public Domicilio(String dirección, String codigoPostal, String localidad, String provincia){
 		this.dirección = dirección;
 		this.codigoPostal = codigoPostal;

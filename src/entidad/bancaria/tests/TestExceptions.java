@@ -27,7 +27,7 @@ public class TestExceptions {
 	public static void fixture() throws CUITInvalidoException,
 			CUITYaAsignadoException, DepositoInicialInvalidoException,
 			SinClientesException, ClienteInexistenteException,
-			TasaDeInteresNegativaException {
+			TasaDeInteresNegativaException, SobregiroNegativoException {
 
 		/* Creamos un Domicilio */
 		domicilio = new Domicilio("42 Wallaby", "2222", "P Sherman", "Sidney");
@@ -62,7 +62,7 @@ public class TestExceptions {
 	public void testCrearCuentaSinClientes()
 			throws DepositoInicialInvalidoException,
 			ClienteInexistenteException, SinClientesException,
-			CUITInvalidoException {
+			CUITInvalidoException, SobregiroNegativoException {
 
 		excepcionEsperada.expect(SinClientesException.class);
 		String[] cuits = new String[0];
@@ -78,7 +78,7 @@ public class TestExceptions {
 	public void testCuentaCorrienteSaldoMenorA10000()
 			throws DepositoInicialInvalidoException,
 			ClienteInexistenteException, SinClientesException,
-			CUITInvalidoException {
+			CUITInvalidoException, SobregiroNegativoException {
 
 		excepcionEsperada.expect(DepositoInicialInvalidoException.class);
 		String[] clientesCuentaCorriente = new String[] { "20000000002" };

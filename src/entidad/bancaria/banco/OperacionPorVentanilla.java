@@ -30,7 +30,8 @@ public class OperacionPorVentanilla {
 		if (!cuentaDestino.isHabilitada()) {
 			throw new CuentaInhabilitadaException(cbu);
 		}
-		cuentaDestino.acreditar(monto, MotivoDeTransaccion.DEPOSITO_POR_VENTANILLA);
+		cuentaDestino.acreditar(monto,
+				MotivoDeTransaccion.DEPOSITO_POR_VENTANILLA);
 	}
 
 	/**
@@ -47,10 +48,12 @@ public class OperacionPorVentanilla {
 	 */
 
 	public static void extraccionEnEfectivoEnCajaDeAhorro(int cbu, Double monto)
-			throws SaldoInsuficienteException, CuentaInhabilitadaException, CBUInexistenteException {
+			throws SaldoInsuficienteException, CuentaInhabilitadaException,
+			CBUInexistenteException {
 		CajaDeAhorro cuentaDestino;
 		cuentaDestino = Banco.buscarCajaDeAhorro(cbu);
-		cuentaDestino.debitar(monto, MotivoDeTransaccion.EXTRACCION_POR_VENTANILLA);
+		cuentaDestino.debitar(monto,
+				MotivoDeTransaccion.EXTRACCION_POR_VENTANILLA);
 	}
 
 	/**
@@ -71,8 +74,9 @@ public class OperacionPorVentanilla {
 	 * @throws SaldoInsuficienteException
 	 */
 
-	public static void transferencia(int cbuDelOrigen, int cbuDelDestino, Double monto)
-			throws CBUInexistenteException, CuentaInhabilitadaException, SaldoInsuficienteException {
+	public static void transferencia(int cbuDelOrigen, int cbuDelDestino,
+			Double monto) throws CBUInexistenteException,
+			CuentaInhabilitadaException, SaldoInsuficienteException {
 
 		Cuenta cuentaOrigen;
 		Cuenta cuentaDestino;
@@ -89,13 +93,15 @@ public class OperacionPorVentanilla {
 		} else if (cuentaOrigen.getTipoDeMoneda() == TipoDeMoneda.PESO) {
 			monto = monto / Banco.getCotizacion();
 			cuentaDestino.acreditar(monto, MotivoDeTransaccion.TRANSFERENCIA,
-					"Conversión de Peso Argentino(ARS) a Dolar(USD): " + monto + " Cotización: 1 ARS - "
-							+ Banco.getCotizacion() + " USD");
+					"Conversión de Peso Argentino(ARS) a Dolar(USD): " + monto
+							+ " Cotización: 1 ARS - " + Banco.getCotizacion()
+							+ " USD");
 		} else {
 			monto = monto * Banco.getCotizacion();
 			cuentaDestino.acreditar(monto, MotivoDeTransaccion.TRANSFERENCIA,
-					"Conversión de Dolar(USD) a Peso Argentino(ARS): " + monto + " Cotización: 1 ARS - "
-							+ Banco.getCotizacion() + " USD");
+					"Conversión de Dolar(USD) a Peso Argentino(ARS): " + monto
+							+ " Cotización: 1 ARS - " + Banco.getCotizacion()
+							+ " USD");
 		}
 	}
 
@@ -109,10 +115,11 @@ public class OperacionPorVentanilla {
 	 * @throws CBUInexistenteException
 	 */
 
-	public static void listarTodosLosMovimientosDeCuenta(int cbu) throws CBUInexistenteException {
+	public static void listarTodosLosMovimientosDeCuenta(int cbu)
+			throws CBUInexistenteException {
 		Cuenta cuenta;
 		cuenta = Banco.buscarCuenta(cbu);
-		for(Transaccion transaccion : cuenta.getTransacciones()){
+		for (Transaccion transaccion : cuenta.getTransacciones()) {
 			System.out.println(transaccion.toString());
 		}
 	}
@@ -132,19 +139,23 @@ public class OperacionPorVentanilla {
 	 * @throws NumeroDeMovimientosInvalidosException
 	 */
 
-	public static void listarLosUltimosMovimientosDeCuenta(int cbu, int cantidadDeMovimientos)
-			throws CBUInexistenteException, NumeroDeMovimientosInvalidosException {
+	public static void listarLosUltimosMovimientosDeCuenta(int cbu,
+			int cantidadDeMovimientos) throws CBUInexistenteException,
+			NumeroDeMovimientosInvalidosException {
 
 		Cuenta cuenta;
 		cuenta = Banco.buscarCuenta(cbu);
 		if (cantidadDeMovimientos < 1) {
-			throw new NumeroDeMovimientosInvalidosException(cantidadDeMovimientos);
+			throw new NumeroDeMovimientosInvalidosException(
+					cantidadDeMovimientos);
 		}
 		if (cantidadDeMovimientos > cuenta.getTransacciones().size()) {
 			cantidadDeMovimientos = cuenta.getTransacciones().size();
 		}
 
-		for(Transaccion transaccion : cuenta.getTransacciones().subList(cuenta.getTransacciones().size() - cantidadDeMovimientos, cuenta.getTransacciones().size())){
+		for (Transaccion transaccion : cuenta.getTransacciones().subList(
+				cuenta.getTransacciones().size() - cantidadDeMovimientos,
+				cuenta.getTransacciones().size())) {
 			System.out.println(transaccion.toString());
 		}
 	}

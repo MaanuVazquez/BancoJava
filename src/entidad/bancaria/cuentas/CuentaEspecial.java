@@ -8,6 +8,11 @@ public class CuentaEspecial {
 	protected Double saldo;
 	protected TipoDeMoneda tipoDeMoneda;
 
+	/**
+	 * Crea una cuenta especial.
+	 * Cuentas de control del banco, no pertenecen a ningun cliente.
+	 */
+	
 	public CuentaEspecial() {
 		saldo = 0.0;
 		tipoDeMoneda = TipoDeMoneda.PESO;
@@ -26,10 +31,24 @@ public class CuentaEspecial {
 		return this.tipoDeMoneda;
 	}
 
+	/**
+	 * Acredita el monto recibido.
+	 * Crea el registro de la transaccion.
+	 * @param monto : cantidad a acreditar
+	 * @param motivo : motivo del credito
+	 */
+	
 	public void acreditar(Double monto, MotivoDeTransaccion motivo) {
 		this.saldo += monto;
 		this.transacciones.add(new Transaccion(TipoDeMovimiento.CREDITO, monto, motivo));
 	}
+	
+	/**
+	 * Debita el monto recibido.
+	 * Crea el registro de la transaccion.
+	 * @param monto : cantidad a debitar
+	 * @param motivo : motivo del debito
+	 */
 	
 	public void debitar(Double monto, MotivoDeTransaccion motivo) {
 		this.saldo -= monto;

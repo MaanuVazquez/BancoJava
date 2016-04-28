@@ -2,6 +2,7 @@ package entidad.bancaria.tests;
 
 import java.io.IOException;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -18,7 +19,7 @@ public class TestBancoJava {
 	public static void fixture() throws CUITInvalidoException,
 			CUITYaAsignadoException, DepositoInicialInvalidoException,
 			SinClientesException, ClienteInexistenteException,
-			TasaDeInteresNegativaException {
+			TasaDeInteresNegativaException, SobregiroNegativoException {
 
 		/* Creamos un Domicilio */
 		domicilio = new Domicilio("42 Wallaby", "2222", "P Sherman", "Sidney");
@@ -53,5 +54,17 @@ public class TestBancoJava {
 		} catch (IOException e) {
 			System.err.println(e);
 		}
+	}
+	
+	@Test
+	public void compararCuentas() throws TasaDeInteresNegativaException, DepositoInicialInvalidoException, SinClientesException, CUITInvalidoException{
+		PersonaFisica persona = new PersonaFisica("20000000001", "Roberto Gomez Bolaños",
+				domicilio, "0303456", "DNI", "00000000", "Soltero",
+				"Psicólogo", "Doña Florinda");
+		PersonaFisica[] personas = new PersonaFisica[1];
+		personas[0] = persona;
+		Cuenta cuenta1 = new CajaDeAhorro (personas, 0.1, 0.1, TipoDeMoneda.PESO);
+		Cuenta cuenta2 = new CajaDeAhorro (personas, 0.1, 0.1, TipoDeMoneda.PESO);
+		Assert.assertFalse(cuenta1.equals(cuenta2));
 	}
 }

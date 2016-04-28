@@ -6,25 +6,111 @@ import java.util.Arrays;
 import entidad.bancaria.clientes.Cliente;
 import entidad.bancaria.excepciones.CuentaInhabilitadaException;
 import entidad.bancaria.excepciones.SaldoInsuficienteException;
+import entidad.bancaria.excepciones.SinClientesException;
 
-public abstract class Cuenta {
+public abstract class Cuenta implements Comparable<Cuenta> {
 
 	protected ArrayList<Transaccion> transacciones;
 	protected Double saldo;
 	protected TipoDeMoneda tipoDeMoneda;
-	private static Integer CBU_MAX = 1;
+	protected static Integer CBU_MAX = 1;
 	private Integer cbu;
 	private boolean habilitada;
 	private Cliente[] clientes;
 
-	public Cuenta(Cliente[] clientes) {
-		saldo = 0.0;
-		tipoDeMoneda = TipoDeMoneda.PESO;
+	/**
+	 * Crea una cuenta, asignandole un cbu unico.
+	 * @param clientes : arreglo de Clientes
+	 * @throws SinClientesException
+	 */
+	
+	public Cuenta(Cliente[] clientes) throws SinClientesException {
+		if(clientes == null){
+			throw new SinClientesException();
+		}
 		this.transacciones = new ArrayList<Transaccion>();
 		cbu = CBU_MAX;
-		CBU_MAX++;
 		this.clientes = clientes;
 		this.habilitada = true;
+		for(Cliente cliente : clientes){
+			cliente.asignarCuenta(this);
+		}
+	}
+	
+	/**
+	 * Si la cuenta esta habilitada y tiene saldo suficiente debita el monto recibido.
+	 * Crea el registro de la transaccion.
+	 * @param monto : cantidad a debitar
+	 * @param motivo : motivo del debito
+	 * @throws SaldoInsuficienteException
+	 * @throws CuentaInhabilitadaException
+	 */
+	
+	public void debitar(Double monto, MotivoDeTransaccion motivo)
+			throws SaldoInsuficienteException, CuentaInhabilitadaException {
+		if (!this.isHabilitada()) {
+			throw new CuentaInhabilitadaException(this.cbu);
+		}
+		if (monto > this.saldo) {
+			throw new SaldoInsuficienteException(this.cbu, monto, this.saldo);
+		}
+		this.transacciones.add(new Transaccion(TipoDeMovimiento.DEBITO, monto, motivo));
+		this.saldo -= monto;
+	}
+	
+	/**
+	 * Si la cuenta esta habilitada y tiene saldo suficiente debita el monto recibido.
+	 * Crea el registro de la transaccion.
+	 * @param monto : cantidad a debitar
+	 * @param motivo : motivo del debito
+	 * @param observaciones : Informacion adicional para registrar sobre la transaccion.
+	 * @throws SaldoInsuficienteException
+	 * @throws CuentaInhabilitadaException
+	 */
+	
+	public void debitar(Double monto, MotivoDeTransaccion motivo, String observaciones)
+			throws SaldoInsuficienteException, CuentaInhabilitadaException {
+		if (!this.isHabilitada()) {
+			throw new CuentaInhabilitadaException(this.cbu);
+		}
+		if (monto > this.saldo) {
+			throw new SaldoInsuficienteException(this.cbu, monto, this.saldo);
+		}
+		this.transacciones.add(new Transaccion(TipoDeMovimiento.DEBITO, monto, motivo, observaciones));
+		this.saldo -= monto;
+	}
+	
+	/**
+	 * Si la cuenta esta habilitada acredita el monto recibido.
+	 * Crea el registro de la transaccion.
+	 * @param monto : cantidad a acreditar
+	 * @param motivo : motivo del credito
+	 * @throws CuentaInhabilitadaException
+	 */
+	
+	public void acreditar(Double monto, MotivoDeTransaccion motivo) throws CuentaInhabilitadaException {
+		if (!this.isHabilitada()) {
+			throw new CuentaInhabilitadaException(this.cbu);
+		}
+		this.saldo += monto;
+		this.transacciones.add(new Transaccion(TipoDeMovimiento.CREDITO, monto, motivo));
+	}
+	
+	/**
+	 * Si la cuenta esta habilitada acredita el monto recibido.
+	 * Crea el registro de la transaccion.
+	 * @param monto : cantidad a acreditar
+	 * @param motivo : motivo del credito
+	 * @param observaciones : Informacion adicional para registrar sobre la transaccion.
+	 * @throws CuentaInhabilitadaException
+	 */
+	
+	public void acreditar(Double monto, MotivoDeTransaccion motivo, String observaciones) throws CuentaInhabilitadaException {
+		if (!this.isHabilitada()) {
+			throw new CuentaInhabilitadaException(this.cbu);
+		}
+		this.saldo += monto;
+		this.transacciones.add(new Transaccion(TipoDeMovimiento.CREDITO, monto, motivo, observaciones));
 	}
 	
 	public ArrayList<Transaccion> getTransacciones() {
@@ -60,46 +146,6 @@ public abstract class Cuenta {
 		this.habilitada = habilitada;
 	}
 
-	public void debitar(Double monto, MotivoDeTransaccion motivo)
-			throws SaldoInsuficienteException, CuentaInhabilitadaException {
-		if (!this.isHabilitada()) {
-			throw new CuentaInhabilitadaException(this.cbu);
-		}
-		if (monto > this.saldo) {
-			throw new SaldoInsuficienteException(this.cbu, monto, this.saldo);
-		}
-		this.transacciones.add(new Transaccion(TipoDeMovimiento.DEBITO, monto, motivo));
-		this.saldo -= monto;
-	}
-	
-	public void debitar(Double monto, MotivoDeTransaccion motivo, String observaciones)
-			throws SaldoInsuficienteException, CuentaInhabilitadaException {
-		if (!this.isHabilitada()) {
-			throw new CuentaInhabilitadaException(this.cbu);
-		}
-		if (monto > this.saldo) {
-			throw new SaldoInsuficienteException(this.cbu, monto, this.saldo);
-		}
-		this.transacciones.add(new Transaccion(TipoDeMovimiento.DEBITO, monto, motivo, observaciones));
-		this.saldo -= monto;
-	}
-	
-	public void acreditar(Double monto, MotivoDeTransaccion motivo) throws CuentaInhabilitadaException {
-		if (!this.isHabilitada()) {
-			throw new CuentaInhabilitadaException(this.cbu);
-		}
-		this.saldo += monto;
-		this.transacciones.add(new Transaccion(TipoDeMovimiento.CREDITO, monto, motivo));
-	}
-	
-	public void acreditar(Double monto, MotivoDeTransaccion motivo, String observaciones) throws CuentaInhabilitadaException {
-		if (!this.isHabilitada()) {
-			throw new CuentaInhabilitadaException(this.cbu);
-		}
-		this.saldo += monto;
-		this.transacciones.add(new Transaccion(TipoDeMovimiento.CREDITO, monto, motivo, observaciones));
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -111,21 +157,26 @@ public abstract class Cuenta {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Cuenta other = (Cuenta) obj;
-		if (cbu == null) {
-			if (other.cbu != null)
-				return false;
-		} else if (!cbu.equals(other.cbu))
-			return false;
-		if (!Arrays.equals(clientes, other.clientes))
+		Cuenta otra = (Cuenta) obj;
+		if (this.cbu != otra.cbu)
 			return false;
 		return true;
 	}
-
+	
+	public int compareTo(Cuenta obj){
+		if (obj == null){
+			throw new NullPointerException();
+		}
+		if(this.cbu < obj.cbu){
+			return 1;
+		} else if (this.cbu > obj.cbu) {
+			return -1;
+		} else {
+			return 0;
+		}
+	}
 }
