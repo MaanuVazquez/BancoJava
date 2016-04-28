@@ -3,7 +3,7 @@ package entidad.bancaria.cuentas;
 import entidad.bancaria.clientes.PersonaFisica;
 import entidad.bancaria.excepciones.TasaDeInteresNegativaException;
 
-public class CajaDeAhorro extends CuentaDeCliente {
+public class CajaDeAhorro extends Cuenta {
 
 	private Double tasaDeInteres;
 
@@ -15,6 +15,7 @@ public class CajaDeAhorro extends CuentaDeCliente {
 		this.saldo = saldo;
 		this.tasaDeInteres = tasaDeInteres;
 		this.tipoDeMoneda = tipoDeMoneda;
+		this.transacciones.add(new Transaccion(TipoDeMovimiento.CREDITO, saldo, MotivoDeTransaccion.DEPOSITO_INICIAL));
 	}
 
 	public Double getTasaDeInteres() {

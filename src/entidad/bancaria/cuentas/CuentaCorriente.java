@@ -5,7 +5,7 @@ import entidad.bancaria.clientes.Cliente;
 import entidad.bancaria.excepciones.CuentaInhabilitadaException;
 import entidad.bancaria.excepciones.SaldoInsuficienteException;
 
-public class CuentaCorriente extends CuentaDeCliente {
+public class CuentaCorriente extends Cuenta {
 
 	private Double sobregiro;
 	private static Double COMISION = 0.03;
@@ -14,6 +14,7 @@ public class CuentaCorriente extends CuentaDeCliente {
 		super(clientes);
 		this.saldo = saldo;
 		this.sobregiro = sobregiro;
+		this.transacciones.add(new Transaccion(TipoDeMovimiento.CREDITO, saldo, MotivoDeTransaccion.DEPOSITO_INICIAL));
 	}
 
 	public Double getSobregiro() {

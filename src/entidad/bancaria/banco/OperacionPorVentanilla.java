@@ -1,7 +1,7 @@
 package entidad.bancaria.banco;
 
 import entidad.bancaria.cuentas.CajaDeAhorro;
-import entidad.bancaria.cuentas.CuentaDeCliente;
+import entidad.bancaria.cuentas.Cuenta;
 import entidad.bancaria.cuentas.MotivoDeTransaccion;
 import entidad.bancaria.cuentas.TipoDeMoneda;
 import entidad.bancaria.cuentas.Transaccion;
@@ -25,7 +25,7 @@ public class OperacionPorVentanilla {
 
 	public static void depositoEnEfectivo(int cbu, Double monto)
 			throws CBUInexistenteException, CuentaInhabilitadaException {
-		CuentaDeCliente cuentaDestino;
+		Cuenta cuentaDestino;
 		cuentaDestino = Banco.buscarCuenta(cbu);
 		if (!cuentaDestino.isHabilitada()) {
 			throw new CuentaInhabilitadaException(cbu);
@@ -74,8 +74,8 @@ public class OperacionPorVentanilla {
 	public static void transferencia(int cbuDelOrigen, int cbuDelDestino, Double monto)
 			throws CBUInexistenteException, CuentaInhabilitadaException, SaldoInsuficienteException {
 
-		CuentaDeCliente cuentaOrigen;
-		CuentaDeCliente cuentaDestino;
+		Cuenta cuentaOrigen;
+		Cuenta cuentaDestino;
 		cuentaOrigen = Banco.buscarCuenta(cbuDelOrigen);
 		cuentaDestino = Banco.buscarCuenta(cbuDelDestino);
 
@@ -109,11 +109,12 @@ public class OperacionPorVentanilla {
 	 * @throws CBUInexistenteException
 	 */
 
-	public static Transaccion[] listarTodosLosMovimientosDeCuenta(int cbu) throws CBUInexistenteException {
-		CuentaDeCliente cuenta;
+	public static void listarTodosLosMovimientosDeCuenta(int cbu) throws CBUInexistenteException {
+		Cuenta cuenta;
 		cuenta = Banco.buscarCuenta(cbu);
-		Transaccion[] movimientos = new Transaccion[cuenta.getTransacciones().size()];
-		return cuenta.getTransacciones().toArray(movimientos);
+		for(Transaccion transaccion : cuenta.getTransacciones()){
+			System.out.println(transaccion.toString());
+		}
 	}
 
 	/**
@@ -131,10 +132,10 @@ public class OperacionPorVentanilla {
 	 * @throws NumeroDeMovimientosInvalidosException
 	 */
 
-	public static Transaccion[] listarLosUltimosMovimientosDeCuenta(int cbu, int cantidadDeMovimientos)
+	public static void listarLosUltimosMovimientosDeCuenta(int cbu, int cantidadDeMovimientos)
 			throws CBUInexistenteException, NumeroDeMovimientosInvalidosException {
 
-		CuentaDeCliente cuenta;
+		Cuenta cuenta;
 		cuenta = Banco.buscarCuenta(cbu);
 		if (cantidadDeMovimientos < 1) {
 			throw new NumeroDeMovimientosInvalidosException(cantidadDeMovimientos);
@@ -143,13 +144,8 @@ public class OperacionPorVentanilla {
 			cantidadDeMovimientos = cuenta.getTransacciones().size();
 		}
 
-		Transaccion[] ultimosMovimientos = new Transaccion[cantidadDeMovimientos];
-
-		for (int i = (cuenta.getTransacciones().size()) - cantidadDeMovimientos; i < cuenta.getTransacciones()
-				.size(); i++) {
-			ultimosMovimientos[i] = cuenta.getTransacciones().get(i);
+		for(Transaccion transaccion : cuenta.getTransacciones().subList(cuenta.getTransacciones().size() - cantidadDeMovimientos, cuenta.getTransacciones().size())){
+			System.out.println(transaccion.toString());
 		}
-
-		return ultimosMovimientos;
 	}
 }

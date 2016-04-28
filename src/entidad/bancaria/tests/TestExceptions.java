@@ -178,7 +178,7 @@ public class TestExceptions {
 
 		excepcionEsperada.expect(NumeroDeMovimientosInvalidosException.class);
 		Banco.listarTodosLosMovimientosDeCuenta(2);
-		Banco.listarLosUltimosMovimientosDeCuenta(2, 10);
+		Banco.listarLosUltimosMovimientosDeCuenta(2, -10);
 	}
 
 	/*

@@ -7,7 +7,7 @@ import entidad.bancaria.clientes.Cliente;
 import entidad.bancaria.excepciones.CuentaInhabilitadaException;
 import entidad.bancaria.excepciones.SaldoInsuficienteException;
 
-public class CuentaDeCliente {
+public abstract class Cuenta {
 
 	protected ArrayList<Transaccion> transacciones;
 	protected Double saldo;
@@ -17,7 +17,7 @@ public class CuentaDeCliente {
 	private boolean habilitada;
 	private Cliente[] clientes;
 
-	public CuentaDeCliente(Cliente[] clientes) {
+	public Cuenta(Cliente[] clientes) {
 		saldo = 0.0;
 		tipoDeMoneda = TipoDeMoneda.PESO;
 		this.transacciones = new ArrayList<Transaccion>();
@@ -117,7 +117,7 @@ public class CuentaDeCliente {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CuentaDeCliente other = (CuentaDeCliente) obj;
+		Cuenta other = (Cuenta) obj;
 		if (cbu == null) {
 			if (other.cbu != null)
 				return false;

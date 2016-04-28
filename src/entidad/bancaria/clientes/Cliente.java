@@ -3,7 +3,7 @@ package entidad.bancaria.clientes;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import entidad.bancaria.cuentas.CuentaDeCliente;
+import entidad.bancaria.cuentas.Cuenta;
 import entidad.bancaria.excepciones.CUITInvalidoException;
 
 public abstract class Cliente {
@@ -12,7 +12,7 @@ public abstract class Cliente {
 	private String nombreORazonSocial;
 	private String telefono;
 	private Domicilio domicilio;
-	private HashSet<CuentaDeCliente> cuentas;
+	private HashSet<Cuenta> cuentas;
 	private boolean activo;
 
 	protected Cliente(String CUIT, String nombreORazonSocial, Domicilio domicilio, String telefono)
@@ -43,8 +43,8 @@ public abstract class Cliente {
 	public boolean darDeBaja() {
 		boolean cuentaHabilitada = false;
 		if (!cuentas.isEmpty()) {
-			Iterator<CuentaDeCliente> iterador = cuentas.iterator();
-			CuentaDeCliente cuenta;
+			Iterator<Cuenta> iterador = cuentas.iterator();
+			Cuenta cuenta;
 			while (iterador.hasNext() && !cuentaHabilitada) {
 				cuenta = iterador.next();
 				cuentaHabilitada = cuenta.isHabilitada();
@@ -82,17 +82,17 @@ public abstract class Cliente {
 		return CUIT;
 	}
 
-	public HashSet<CuentaDeCliente> getCuentas() {
+	public HashSet<Cuenta> getCuentas() {
 		return cuentas;
 	}
 
-	public void asignarCuenta(CuentaDeCliente cuenta) {
+	public void asignarCuenta(Cuenta cuenta) {
 		cuentas.add(cuenta);
 	}
 
-	public void removerCuenta(CuentaDeCliente cuenta) {
-		Iterator<CuentaDeCliente> iterador = cuentas.iterator();
-		CuentaDeCliente cuentaTemporal = iterador.next();
+	public void removerCuenta(Cuenta cuenta) {
+		Iterator<Cuenta> iterador = cuentas.iterator();
+		Cuenta cuentaTemporal = iterador.next();
 		while (iterador.hasNext() && cuentaTemporal != cuenta) {
 			cuenta = iterador.next();
 		}

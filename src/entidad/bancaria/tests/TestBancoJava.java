@@ -1,9 +1,9 @@
 package entidad.bancaria.tests;
 
+import java.io.IOException;
+
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import entidad.bancaria.banco.*;
 import entidad.bancaria.clientes.*;
@@ -14,9 +14,6 @@ public class TestBancoJava {
 
 	private static Domicilio domicilio;
 
-	/*
-	 * Pre de cada test
-	 */
 	@BeforeClass
 	public static void fixture() throws CUITInvalidoException,
 			CUITYaAsignadoException, DepositoInicialInvalidoException,
@@ -49,12 +46,12 @@ public class TestBancoJava {
 		Banco.crearCuentaCorriente(clientesCuentaCorriente, 10000.0, 10000.0);
 	}
 
-	/*
-	 * Prueba error debitar saldo insuficiente
-	 */
-
 	@Test
-	public void metodo() {
-		
+	public void ProcesoBatch() {
+		try {
+			Banco.cobroDeMantenimientos();
+		} catch (IOException e) {
+			System.err.println(e);
+		}
 	}
 }

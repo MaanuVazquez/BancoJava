@@ -9,7 +9,7 @@ import entidad.bancaria.excepciones.*;
 
 public class Banco {
 
-	private static HashMap<Integer, CuentaDeCliente> cuentas = new HashMap<Integer, CuentaDeCliente>();
+	private static HashMap<Integer, Cuenta> cuentas = new HashMap<Integer, Cuenta>();
 	private static HashMap<Integer, CajaDeAhorro> cajasDeAhorro = new HashMap<Integer, CajaDeAhorro>();
 	private static HashMap<String, Cliente> clientes = new HashMap<String, Cliente>();
 	private static HashMap<String, PersonaFisica> personasFisicas = new HashMap<String, PersonaFisica>();
@@ -98,12 +98,15 @@ public class Banco {
 	 *            : CBU de la cuenta que se desea obtener los movimientos.
 	 * @return Arreglo de todas las transacciones de la cuenta. Devuelve un
 	 *         arreglo vacio en caso de recibir un cbu invalido.
-	 * @throws CBUInexistenteException
 	 */
 
-	public static Transaccion[] listarTodosLosMovimientosDeCuenta(int cbu) throws CBUInexistenteException {
+	public static void listarTodosLosMovimientosDeCuenta(int cbu) {
 
-		return OperacionPorVentanilla.listarTodosLosMovimientosDeCuenta(cbu);
+		try {
+			OperacionPorVentanilla.listarTodosLosMovimientosDeCuenta(cbu);
+		} catch (CBUInexistenteException e) {
+			System.err.println(e);
+		}
 
 	}
 
@@ -118,14 +121,13 @@ public class Banco {
 	 *         la cuenta. En caso de tener menos transacciones que
 	 *         CANTIDADDEMOVIMIENTOS devuelve todas sus transacciones. Devuelve
 	 *         un arreglo vacio en caso de recibir un cbu invalido.
-	 * @throws NumeroDeMovimientosInvalidosException
-	 * @throws CBUInexistenteException
+	 * @throws NumeroDeMovimientosInvalidosException 
+	 * @throws CBUInexistenteException 
 	 */
 
-	public static Transaccion[] listarLosUltimosMovimientosDeCuenta(int cbu, int cantidadDeMovimientos)
-			throws CBUInexistenteException, NumeroDeMovimientosInvalidosException {
+	public static void listarLosUltimosMovimientosDeCuenta(int cbu, int cantidadDeMovimientos) throws CBUInexistenteException, NumeroDeMovimientosInvalidosException {
 
-		return OperacionPorVentanilla.listarLosUltimosMovimientosDeCuenta(cbu, cantidadDeMovimientos);
+		OperacionPorVentanilla.listarLosUltimosMovimientosDeCuenta(cbu, cantidadDeMovimientos);
 
 	}
 
@@ -232,8 +234,8 @@ public class Banco {
 	 * @throws CBUInexistenteException
 	 */
 
-	public static CuentaDeCliente buscarCuenta(int cbu) throws CBUInexistenteException {
-		CuentaDeCliente cuenta = null;
+	public static Cuenta buscarCuenta(int cbu) throws CBUInexistenteException {
+		Cuenta cuenta = null;
 
 		cuenta = cuentas.get(cbu);
 
