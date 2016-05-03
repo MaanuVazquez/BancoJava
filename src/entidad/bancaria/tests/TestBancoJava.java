@@ -47,24 +47,123 @@ public class TestBancoJava {
 		Banco.crearCuentaCorriente(clientesCuentaCorriente, 10000.0, 10000.0);
 	}
 
+	/*
+	 * Prueba proceso batch
+	 */
+
 	@Test
 	public void ProcesoBatch() {
 		try {
+			ProcesoBatch.setCOSTO_DE_MANTENIMIENTO(50.0);
 			Banco.cobroDeMantenimientos();
-		} catch (IOException e) {
+		} catch (IOException | CostoDeMantenimientoNoInicializadoException
+				| CostoDeMantenimientoNoPositivoException e) {
 			System.err.println(e);
 		}
 	}
-	
+
+	/*
+	 * Prueba Comparar cuentas
+	 */
+
 	@Test
-	public void compararCuentas() throws TasaDeInteresNegativaException, DepositoInicialInvalidoException, SinClientesException, CUITInvalidoException{
-		PersonaFisica persona = new PersonaFisica("20000000001", "Roberto Gomez Bolaños",
-				domicilio, "0303456", "DNI", "00000000", "Soltero",
-				"Psicólogo", "Doña Florinda");
+	public void compararCuentas() throws TasaDeInteresNegativaException,
+			DepositoInicialInvalidoException, SinClientesException,
+			CUITInvalidoException {
+		PersonaFisica persona = new PersonaFisica("20000000001",
+				"Roberto Gomez Bolaños", domicilio, "0303456", "DNI",
+				"00000000", "Soltero", "Psicólogo", "Doña Florinda");
 		PersonaFisica[] personas = new PersonaFisica[1];
 		personas[0] = persona;
-		Cuenta cuenta1 = new CajaDeAhorro (personas, 0.1, 0.1, TipoDeMoneda.PESO);
-		Cuenta cuenta2 = new CajaDeAhorro (personas, 0.1, 0.1, TipoDeMoneda.PESO);
+		Cuenta cuenta1 = new CajaDeAhorro(personas, 0.1, 0.1, TipoDeMoneda.PESO);
+		Cuenta cuenta2 = new CajaDeAhorro(personas, 0.1, 0.1, TipoDeMoneda.PESO);
 		Assert.assertFalse(cuenta1.equals(cuenta2));
 	}
+
+	/*
+	 * Acreditar saldo a caja de ahorro.
+	 */
+
+	@Test
+	public void acreditarSaldoEnCajaDeAhorro() throws CBUInexistenteException,
+			CuentaInhabilitadaException {
+		Banco.depositoEnEfectivo(1, 10000.0);
+	}
+
+	/*
+	 * Acreditar saldo a cuenta corriente
+	 */
+
+	@Test
+	public void acreditarSaldoEnCuentaCorriente()
+			throws DepositoInicialInvalidoException,
+			ClienteInexistenteException, SinClientesException,
+			CUITInvalidoException, SobregiroNegativoException,
+			CBUInexistenteException, CuentaInhabilitadaException {
+
+		String[] clientesCuentaCorriente = new String[] { "20000000001" };
+		Banco.crearCuentaCorriente(clientesCuentaCorriente, 100000.0, 10.0);
+		Banco.depositoEnEfectivo(1, 1000.0);
+
+	}
+
+	/*
+	 * Acreditar en cuenta especial
+	 */
+
+	@Test
+	public void acreditarSaldoEnCuentaEspecial() throws IOException,
+			CostoDeMantenimientoNoInicializadoException,
+			CostoDeMantenimientoNoPositivoException {
+		ProcesoBatch.setCOSTO_DE_MANTENIMIENTO(100.0);
+		Banco.cobroDeMantenimientos();
+
+	}
+
+	/*
+	 * Extraccion en caja de ahorro
+	 */
+
+	@Test
+	public void extraccionSaldoEnCajaDeAhorro()
+			throws SaldoInsuficienteException, CuentaInhabilitadaException,
+			CBUInexistenteException {
+
+		Banco.extraccionEnEfectivoEnCajaDeAhorro(1, 1000.0);
+	}
+
+	/*
+	 * Extraccion en cuenta corriente
+	 */
+
+	@Test
+	public void extraccionSaldoEnCuentaCorriente()
+			throws SaldoInsuficienteException, CuentaInhabilitadaException,
+			CBUInexistenteException, DepositoInicialInvalidoException,
+			ClienteInexistenteException, SinClientesException,
+			CUITInvalidoException, SobregiroNegativoException {
+
+		String[] clientesCuentaCorriente = new String[] { "20000000001" };
+		Banco.crearCuentaCorriente(clientesCuentaCorriente, 100000.0, 10.0);
+		Banco.extraccionEnEfectivoEnCajaDeAhorro(1, 1000.0);
+	}
+
+	/*
+	 * Prueba buscar un cliente
+	 */
+
+	@Test
+	public void buscarCliente() throws ClienteInexistenteException,
+			CUITInvalidoException, CUITYaAsignadoException {
+		Domicilio domicilio = new Domicilio("Calle Falsa 123", "1234asdf", "Un lugar", "Una provincia");
+		Banco.agregarPersonaFisica("20034002501", "Jose schewer", domicilio,
+				"1234-4321", "DNI", "12345678", "Casado",
+				"ingeniero", "amalia");
+		Cliente cliente = Banco.buscarCliente("20034002501");
+		Assert.assertTrue("Jose Perez".equals(cliente.getNombreORazonSocial()));
+		Assert.assertTrue("20034002501".equals(cliente.getCUIT()));
+		Assert.assertTrue(domicilio.equals(cliente.getDomicilio()));
+	}
+	
+
 }

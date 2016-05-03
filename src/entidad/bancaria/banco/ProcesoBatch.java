@@ -12,6 +12,8 @@ import java.util.Map.Entry;
 import entidad.bancaria.cuentas.CajaDeAhorro;
 import entidad.bancaria.cuentas.MotivoDeTransaccion;
 import entidad.bancaria.cuentas.TipoDeMoneda;
+import entidad.bancaria.excepciones.CostoDeMantenimientoNoInicializadoException;
+import entidad.bancaria.excepciones.CostoDeMantenimientoNoPositivoException;
 import entidad.bancaria.excepciones.CuentaInhabilitadaException;
 import entidad.bancaria.excepciones.SaldoInsuficienteException;
 
@@ -24,10 +26,13 @@ public class ProcesoBatch {
 	 * de las cuentas a las que se les debito, y el registro de errores.
 	 * 
 	 * @throws IOException
+	 * @throws CostoDeMantenimientoNoInicializadoException 
 	 */
 
 	public static void cobroDeMantenimientos(
-			HashMap<Integer, CajaDeAhorro> cuentas) throws IOException {
+			HashMap<Integer, CajaDeAhorro> cuentas) throws IOException, CostoDeMantenimientoNoInicializadoException {
+		if(costoDeMantenimiento == 0.0)
+			throw new CostoDeMantenimientoNoInicializadoException();
 		String fecha = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 		File cobrados = new File("MantenimientosCobrados " + fecha + ".txt");
 		File errores = new File("ErroresMantenimiento " + fecha + ".txt");
@@ -121,9 +126,12 @@ public class ProcesoBatch {
 	 * 
 	 * @param costoDeMantenimiento
 	 *            nuevo costo de mantenimiento.
+	 * @throws CostoDeMantenimientoNoPositivoException 
 	 */
 
-	public static void setCOSTO_DE_MANTENIMIENTO(Double costoDeMantenimiento) {
+	public static void setCOSTO_DE_MANTENIMIENTO(Double costoDeMantenimiento) throws CostoDeMantenimientoNoPositivoException {
+		if(costoDeMantenimiento <= 0.0)
+			throw new CostoDeMantenimientoNoPositivoException(costoDeMantenimiento);
 		ProcesoBatch.costoDeMantenimiento = costoDeMantenimiento;
 	}
 

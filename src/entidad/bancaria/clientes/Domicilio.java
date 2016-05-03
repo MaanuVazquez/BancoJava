@@ -38,4 +38,11 @@ public class Domicilio {
 		return provincia;
 	}
 
+	@Override
+	public String toString() {
+		return "Domicilio : dirección=" + dirección + ", codigoPostal="
+				+ codigoPostal + ", localidad=" + localidad + ", provincia="
+				+ provincia;
+	}
+
 }

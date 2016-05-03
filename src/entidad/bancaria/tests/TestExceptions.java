@@ -1,5 +1,7 @@
 package entidad.bancaria.tests;
 
+import java.io.IOException;
+
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -66,7 +68,7 @@ public class TestExceptions {
 
 		excepcionEsperada.expect(SinClientesException.class);
 		String[] cuits = new String[0];
-		Banco.crearCuentaCorriente(cuits, 5000.0, 10000.0);
+		Banco.crearCuentaCorriente(cuits, 50000.0, 10000.0);
 
 	}
 
@@ -193,4 +195,27 @@ public class TestExceptions {
 		Banco.extraccionEnEfectivoEnCajaDeAhorro(2, 1000000.0);
 	}
 
+	/*
+	 * Prueba error costo de mantenimiento no inicializado
+	 */
+
+	@Test
+	public void testCostoDeMantenimientoNoinicializado() throws IOException,
+			CostoDeMantenimientoNoInicializadoException {
+		
+		excepcionEsperada.expect(CostoDeMantenimientoNoInicializadoException.class);
+		Banco.cobroDeMantenimientos();
+	}
+
+	/*
+	 * Prueba error costo de mantenimiento nevativo
+	 */
+
+	@Test
+	public void testCostoDeMantenimientonegativo()
+			throws CostoDeMantenimientoNoPositivoException {
+		
+		excepcionEsperada.expect(CostoDeMantenimientoNoPositivoException.class);
+		ProcesoBatch.setCOSTO_DE_MANTENIMIENTO(-10.0);
+	}
 }

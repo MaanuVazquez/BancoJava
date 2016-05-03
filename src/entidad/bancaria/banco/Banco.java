@@ -452,9 +452,10 @@ public class Banco {
 	 * de las cuentas a las que se les debito, y el registro de errores.
 	 * 
 	 * @throws IOException
+	 * @throws CostoDeMantenimientoNoInicializadoException 
 	 */
 
-	public static void cobroDeMantenimientos() throws IOException {
+	public static void cobroDeMantenimientos() throws IOException, CostoDeMantenimientoNoInicializadoException {
 
 		ProcesoBatch.cobroDeMantenimientos(cajasDeAhorro);
 

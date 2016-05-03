@@ -8,6 +8,8 @@ import entidad.bancaria.excepciones.CUITInvalidoException;
 
 public abstract class Cliente {
 
+	
+
 	private String CUIT;
 	private String nombreORazonSocial;
 	private String telefono;
@@ -33,6 +35,7 @@ public abstract class Cliente {
 		this.setDomicilio(domicilio);
 		this.setTelefono(telefono);
 		this.activo = true;
+		cuentas = new HashSet<Cuenta>();
 	}
 
 	/**
@@ -153,5 +156,21 @@ public abstract class Cliente {
 			throw new NullPointerException();
 		}
 		return this.CUIT.compareTo(obj.CUIT);
+	}
+	
+	@Override
+	public String toString() {
+		return "Cliente : \n CUIT=" + CUIT + "\n nombreORazonSocial="
+				+ nombreORazonSocial + "\n telefono=" + telefono
+				+ "\n domicilio=" + domicilio.toString() + "\n cuentas=" + devolverCBUs()
+				+ "\n activo=" + activo + "\n";
+	}
+	
+	private String devolverCBUs(){
+		String palabra = "";
+		for(Cuenta cuenta : cuentas){
+			palabra += cuenta.getCBU() + " "; 
+		}
+		return palabra;
 	}
 }

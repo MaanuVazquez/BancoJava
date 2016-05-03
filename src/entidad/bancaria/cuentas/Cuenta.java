@@ -25,7 +25,7 @@ public abstract class Cuenta implements Comparable<Cuenta> {
 	 */
 	
 	public Cuenta(Cliente[] clientes) throws SinClientesException {
-		if(clientes == null){
+		if(clientes == null || clientes.length == 0){
 			throw new SinClientesException();
 		}
 		this.transacciones = new ArrayList<Transaccion>();
@@ -167,6 +167,8 @@ public abstract class Cuenta implements Comparable<Cuenta> {
 		return true;
 	}
 	
+	
+
 	public int compareTo(Cuenta obj){
 		if (obj == null){
 			throw new NullPointerException();
@@ -178,5 +180,21 @@ public abstract class Cuenta implements Comparable<Cuenta> {
 		} else {
 			return 0;
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return "Cuenta transacciones=" + transacciones + ", saldo=" + saldo
+				+ ", tipoDeMoneda=" + tipoDeMoneda + ", cbu=" + cbu
+				+ ", habilitada=" + habilitada + ", clientes="
+				+ devolverCuit();
+	}
+	
+	private String devolverCuit(){
+		String palabra = "";
+		for(Cliente cliente : clientes){
+			palabra += cliente.getCUIT() + " "; 
+		}
+		return palabra;
 	}
 }
