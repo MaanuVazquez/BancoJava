@@ -1,6 +1,7 @@
 package entidad.bancaria.tests;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -75,8 +76,10 @@ public class TestBancoJava {
 				"00000000", "Soltero", "Psicólogo", "Doña Florinda");
 		PersonaFisica[] personas = new PersonaFisica[1];
 		personas[0] = persona;
-		Cuenta cuenta1 = new CajaDeAhorro(personas, 0.1, 0.1, TipoDeMoneda.PESO);
-		Cuenta cuenta2 = new CajaDeAhorro(personas, 0.1, 0.1, TipoDeMoneda.PESO);
+		CajasDeAhorro cuenta1 = new CajaDeAhorro(personas, 0.1, 0.1,
+				TipoDeMoneda.PESO);
+		CajasDeAhorro cuenta2 = new CajaDeAhorro(personas, 0.1, 0.1,
+				TipoDeMoneda.PESO);
 		Assert.assertFalse(cuenta1.equals(cuenta2));
 	}
 
@@ -108,7 +111,7 @@ public class TestBancoJava {
 	}
 
 	/*
-	 * Acreditar en cuenta especial
+	 * Acreditar en cuenta especial y cobro de mantenimiento
 	 */
 
 	@Test
@@ -155,15 +158,67 @@ public class TestBancoJava {
 	@Test
 	public void buscarCliente() throws ClienteInexistenteException,
 			CUITInvalidoException, CUITYaAsignadoException {
-		Domicilio domicilio = new Domicilio("Calle Falsa 123", "1234asdf", "Un lugar", "Una provincia");
-		Banco.agregarPersonaFisica("20034002501", "Jose schewer", domicilio,
-				"1234-4321", "DNI", "12345678", "Casado",
-				"ingeniero", "amalia");
+		Domicilio domicilio = new Domicilio("Calle Falsa 123", "1234asdf",
+				"Un lugar", "Una provincia");
+		Banco.agregarPersonaFisica("20034002501", "Jose perez", domicilio,
+				"1234-4321", "DNI", "12345678", "Casado", "ingeniero", "amalia");
 		Cliente cliente = Banco.buscarCliente("20034002501");
-		Assert.assertTrue("Jose Perez".equals(cliente.getNombreORazonSocial()));
+		Assert.assertTrue("Jose perez".equals(cliente.getNombreORazonSocial()));
 		Assert.assertTrue("20034002501".equals(cliente.getCUIT()));
 		Assert.assertTrue(domicilio.equals(cliente.getDomicilio()));
 	}
-	
+
+	/*
+	 * Prueba tranferencia
+	 */
+
+	@Test
+	public void testTransferecias() throws CBUInexistenteException,
+			CuentaInhabilitadaException, SaldoInsuficienteException {
+
+		Banco.transferencia(1, 2, 1000.0);
+
+	}
+
+	/*
+	 * Prueba buscar persona fisica
+	 */
+
+	@Test
+	public void testBuscarPersonaFisica() throws CUITInvalidoException,
+			CUITYaAsignadoException {
+
+		Domicilio domicilio = new Domicilio("Calle Falsa 123", "1234asdf",
+				"Un lugar", "Una provincia");
+		Banco.agregarPersonaFisica("20034002601", "Jose schewer", domicilio,
+				"1234-4321", "DNI", "12345678", "Casado", "ingeniero", "amalia");
+
+	}
+
+	/*
+	 * Prueba pagar interes
+	 */
+
+	@Test
+	public void testPagarInteres() throws DepositoInicialInvalidoException,
+			SinClientesException, ClienteInexistenteException,
+			CUITInvalidoException, TasaDeInteresNegativaException,
+			CBUInexistenteException {
+
+		HashMap<Integer, CajaDeAhorro> cuentas = new HashMap<Integer, CajaDeAhorro>();
+		cuentas.put(Banco.buscarCajaDeAhorro(1).getCBU(),
+				Banco.buscarCajaDeAhorro(1));
+
+		ProcesoBatch.pagarInteres(cuentas);
+	}
+
+	/*
+	 * Prueba cobrar Retenciones
+	 */
+
+	@Test
+	public void testCobrarRetenciones() {
+		Banco.cobrarRetenciones(100.0);
+	}
 
 }
