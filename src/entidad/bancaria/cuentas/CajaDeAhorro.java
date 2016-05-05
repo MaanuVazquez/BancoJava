@@ -35,7 +35,7 @@ public class CajaDeAhorro extends Cuenta {
 		this.transacciones.add(new Transaccion(TipoDeMovimiento.CREDITO, depositoInicial, MotivoDeTransaccion.DEPOSITO_INICIAL));
 	}
 
-	public Double getTasaDeInteres() {
+	public double getTasaDeInteres() {
 		return tasaDeInteres;
 	}
 }

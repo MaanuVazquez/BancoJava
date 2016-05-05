@@ -1,0 +1,4 @@
+CBU: 1, Tipo De Cuenta: Caja De Ahorro, 50.0, PESO, 14.8.
+CBU: 2, Tipo De Cuenta: Caja De Ahorro, 3.378378378378378, DOLAR, 14.8.
+CBU: 4, Tipo De Cuenta: Caja De Ahorro, 50.0, PESO, 14.8.
+CBU: 10, Tipo De Cuenta: Caja De Ahorro, 50.0, PESO, 14.8.
