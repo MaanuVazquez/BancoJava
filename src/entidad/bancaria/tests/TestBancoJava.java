@@ -76,9 +76,9 @@ public class TestBancoJava {
 				"00000000", "Soltero", "Psicólogo", "Doña Florinda");
 		PersonaFisica[] personas = new PersonaFisica[1];
 		personas[0] = persona;
-		CajasDeAhorro cuenta1 = new CajaDeAhorro(personas, 0.1, 0.1,
+		CajaDeAhorro cuenta1 = new CajaDeAhorro(personas, 0.1, 0.1,
 				TipoDeMoneda.PESO);
-		CajasDeAhorro cuenta2 = new CajaDeAhorro(personas, 0.1, 0.1,
+		CajaDeAhorro cuenta2 = new CajaDeAhorro(personas, 0.1, 0.1,
 				TipoDeMoneda.PESO);
 		Assert.assertFalse(cuenta1.equals(cuenta2));
 	}
