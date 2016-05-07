@@ -425,7 +425,12 @@ public class TestBancoJava {
 		Banco.extraccionEnEfectivoEnCajaDeAhorro(cbu, 50001.0);
 
 		Assert.assertEquals(0, Banco.buscarCuenta(cbu).getSaldo(), 0.1);
-
+		excepcionEsperada.expect(SaldoInsuficienteException.class);
 	}
+	
+	/*
+	 * prueba 
+	 */
 
+	
 }
