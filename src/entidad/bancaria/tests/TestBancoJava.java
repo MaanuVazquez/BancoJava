@@ -405,7 +405,7 @@ public class TestBancoJava {
 	/*
 	 * prueba extraer mas de lo que tengo
 	 */
-	
+
 	@Test
 	public void testExtraerMasDeLoQueTengo() throws CUITInvalidoException,
 			CUITYaAsignadoException, DepositoInicialInvalidoException,
@@ -426,15 +426,19 @@ public class TestBancoJava {
 
 		Banco.extraccionEnEfectivoEnCajaDeAhorro(cbu, 50001.0);
 
-		
 	}
-	
+
 	/*
 	 * prueba debitar
 	 */
 
 	@Test
-	public void testDebitar() throws SaldoInsuficienteException, CuentaInhabilitadaException, CBUInexistenteException, DepositoInicialInvalidoException, SinClientesException, ClienteInexistenteException, CUITInvalidoException, TasaDeInteresNegativaException, CUITYaAsignadoException{
+	public void testDebitar() throws SaldoInsuficienteException,
+			CuentaInhabilitadaException, CBUInexistenteException,
+			DepositoInicialInvalidoException, SinClientesException,
+			ClienteInexistenteException, CUITInvalidoException,
+			TasaDeInteresNegativaException, CUITYaAsignadoException {
+		
 		Domicilio domicilio2 = new Domicilio("43 Wallaby", "2222", "P Sherman",
 				"Sidney");
 
@@ -448,8 +452,8 @@ public class TestBancoJava {
 
 		Banco.extraccionEnEfectivoEnCajaDeAhorro(cbu, 50.0);
 
-		Assert.assertEquals(49950.0, Banco.buscarCuenta(cbu).getSaldo(), 0.1);
-	
+		Assert.assertEquals(49950, Banco.buscarCuenta(cbu).getSaldo(), 0.1);
+
 	}
-	
+
 }
