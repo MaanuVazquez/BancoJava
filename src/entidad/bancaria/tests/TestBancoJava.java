@@ -405,12 +405,14 @@ public class TestBancoJava {
 	/*
 	 * prueba extraer mas de lo que tengo
 	 */
-
+	
+	@Test
 	public void testExtraerMasDeLoQueTengo() throws CUITInvalidoException,
 			CUITYaAsignadoException, DepositoInicialInvalidoException,
 			SinClientesException, ClienteInexistenteException,
 			TasaDeInteresNegativaException, SaldoInsuficienteException,
 			CuentaInhabilitadaException, CBUInexistenteException {
+		excepcionEsperada.expect(SaldoInsuficienteException.class);
 		Domicilio domicilio2 = new Domicilio("42 Wallaby", "2222", "P Sherman",
 				"Sidney");
 
@@ -424,13 +426,30 @@ public class TestBancoJava {
 
 		Banco.extraccionEnEfectivoEnCajaDeAhorro(cbu, 50001.0);
 
-		Assert.assertEquals(0, Banco.buscarCuenta(cbu).getSaldo(), 0.1);
-		excepcionEsperada.expect(SaldoInsuficienteException.class);
+		
 	}
 	
 	/*
-	 * prueba 
+	 * prueba debitar
 	 */
 
+	@Test
+	public void testDebitar() throws SaldoInsuficienteException, CuentaInhabilitadaException, CBUInexistenteException, DepositoInicialInvalidoException, SinClientesException, ClienteInexistenteException, CUITInvalidoException, TasaDeInteresNegativaException, CUITYaAsignadoException{
+		Domicilio domicilio2 = new Domicilio("43 Wallaby", "2222", "P Sherman",
+				"Sidney");
+
+		Banco.agregarPersonaFisica("20000000004", "Roberto Gomez Bolaño",
+				domicilio2, "0303454", "DNI", "00000000", "Soltero",
+				"Psicólogo", "Doña Florinda");
+
+		String[] clientesCajaDeAhorro = new String[] { "20000000004" };
+		int cbu = Banco.crearCajaDeAhorro(clientesCajaDeAhorro, 50000.0, 0.1,
+				TipoDeMoneda.PESO);
+
+		Banco.extraccionEnEfectivoEnCajaDeAhorro(cbu, 50.0);
+
+		Assert.assertEquals(49950.0, Banco.buscarCuenta(cbu).getSaldo(), 0.1);
+	
+	}
 	
 }
