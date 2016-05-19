@@ -412,6 +412,7 @@ public class TestBancoJava {
 			SinClientesException, ClienteInexistenteException,
 			TasaDeInteresNegativaException, SaldoInsuficienteException,
 			CuentaInhabilitadaException, CBUInexistenteException {
+		
 		excepcionEsperada.expect(SaldoInsuficienteException.class);
 		Domicilio domicilio2 = new Domicilio("42 Wallaby", "2222", "P Sherman",
 				"Sidney");
@@ -455,5 +456,7 @@ public class TestBancoJava {
 		Assert.assertEquals(49950, Banco.buscarCuenta(cbu).getSaldo(), 0.1);
 
 	}
+	
+	
 
 }
